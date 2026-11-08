@@ -351,6 +351,52 @@ main {
   transition: filter 600ms ease;
 }
 
+/* Laser-written name: bright lines traced by the beam, a faint glow inside
+   each letter once it's finished, and a shimmer that keeps scanning the lines. */
+.name.is-laser .name__fill path {
+  fill: rgba(124, 244, 255, 0.18);
+}
+
+.name.is-laser .name__ink path {
+  fill: none;
+  stroke: #f2fdff;
+  stroke-width: calc(var(--u, 1) * 2.4);
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+.name.is-laser .name__scan path {
+  fill: none;
+  stroke: #ffffff;
+  stroke-width: calc(var(--u, 1) * 3.6);
+  stroke-linecap: round;
+  stroke-dasharray: 5 95;
+  opacity: 0;
+}
+
+.hero.is-armed .name.is-laser .name__fill path {
+  fill: rgba(124, 244, 255, 0);
+  transition: fill 1s ease;
+}
+
+.hero.is-armed.is-lit .name.is-laser .name__fill path {
+  fill: rgba(124, 244, 255, 0.18);
+}
+
+.hero.is-lit .name.is-laser .name__scan path {
+  opacity: 0.9;
+  animation: scan 2.8s linear infinite;
+}
+
+@keyframes scan {
+  from {
+    stroke-dashoffset: 100;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
 /* Once lit, the name hums like a neon tube. */
 .hero.is-ready .name {
   animation: hum 4s ease-in-out 1.2s infinite;
@@ -793,6 +839,10 @@ main {
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
+  }
+
+  .name__scan {
+    display: none;
   }
 
   *,

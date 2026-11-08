@@ -12,7 +12,7 @@ Live site: https://you-are-invited-to-party.github.io/
 
 Each link is just the site address with the guest's name after `?`, for example `https://you-are-invited-to-party.github.io/?Sara` or `https://you-are-invited-to-party.github.io/?Ali+Rezaei` (use `+` for spaces). You can also type these by hand.
 
-Every invitation is unique: the lasers draw the guest's name, the light show's running order comes from the name, and the footer shows an invitation number. Tapping the stage fires the lasers at that spot.
+Every invitation is unique: a laser writes the guest's name stroke by stroke, the light show's running order comes from the name, and the footer shows an invitation number. Tapping the stage fires the lasers at that spot.
 
 ## Changing party details
 
@@ -31,3 +31,8 @@ python3 -m http.server 8765
 ```
 
 Then open http://localhost:8765/?Sara
+
+## Credits
+
+- [Unbounded](https://github.com/googlefonts/unbounded) by The Unbounded Project Authors, SIL Open Font License ([`assets/fonts/OFL.txt`](assets/fonts/OFL.txt)). A Latin subset with merged outlines is bundled so the lasers can trace each letter.
+- [opentype.js](https://opentype.js.org) 1.3.4, MIT License, bundled in [`assets/vendor`](assets/vendor).

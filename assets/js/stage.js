@@ -77,6 +77,33 @@ function beamSprite([r, g, b]) {
   return c;
 }
 
+// A beam that stays bright all the way to the spot it's writing on.
+function solidSprite([r, g, b]) {
+  const w = 256;
+  const h = 32;
+  const c = makeCanvas(w, h);
+  const x = c.getContext('2d');
+  const mid = h / 2;
+  for (let i = 5; i >= 1; i--) {
+    const spread = (i / 5) * mid;
+    x.fillStyle = `rgba(${r},${g},${b},0.07)`;
+    x.beginPath();
+    x.moveTo(0, mid - 1);
+    x.lineTo(w, mid - spread);
+    x.lineTo(w, mid + spread);
+    x.lineTo(0, mid + 1);
+    x.fill();
+  }
+  const core = x.createLinearGradient(0, 0, w, 0);
+  core.addColorStop(0, 'rgba(255,255,255,1)');
+  core.addColorStop(0.1, `rgba(${r},${g},${b},0.9)`);
+  core.addColorStop(0.85, `rgba(${r},${g},${b},0.9)`);
+  core.addColorStop(1, 'rgba(255,255,255,1)');
+  x.fillStyle = core;
+  x.fillRect(0, mid - 1, w, 2);
+  return c;
+}
+
 // Soft, tileable fog in one colour.
 function hazeSprite(color, rand) {
   const s = 256;
@@ -143,6 +170,9 @@ export function createStage(canvas, { seed = 1, reducedMotion = false } = {}) {
   const sprites = Object.fromEntries(
     ['ice', 'white', 'magenta'].map((k) => [k, beamSprite(COLORS[k])]),
   );
+  const pens = { ice: solidSprite(COLORS.ice), white: solidSprite(COLORS.white) };
+  const sparks = [];
+  let lastFrame = performance.now();
   const haze = {
     blue: hazeSprite(mix(COLORS.blue, [120, 140, 255], 0.5), mulberry32(seed + 1)),
     red: hazeSprite(mix(COLORS.red, [255, 120, 140], 0.4), mulberry32(seed + 2)),
@@ -299,7 +329,11 @@ export function createStage(canvas, { seed = 1, reducedMotion = false } = {}) {
       drawFans(b, t, src, fade * beamLevel, open);
     }
 
-    if (intro) drawIntroBeams(now, src);
+    if (intro) {
+      if (intro.getPen) drawPen(now, src);
+      else drawIntroBeams(now, src);
+    }
+    if (sparks.length) drawSparks(now);
     if (hits.length) drawHits(now, src);
 
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -371,6 +405,59 @@ export function createStage(canvas, { seed = 1, reducedMotion = false } = {}) {
     });
   }
 
+  // The writing beam: it ends exactly where the name is being drawn, with a
+  // hot spot and a few sparks. Between strokes the laser blanks.
+  function drawPen(now, src) {
+    const it = (now - intro.start) / 1000 - intro.ignite;
+    if (it < 0 || it > intro.draw) return;
+    const pen = intro.getPen(it);
+    if (!pen) return;
+    const dx = pen.x - src.x;
+    const dy = pen.y - src.y;
+    const dist = Math.hypot(dx, dy);
+    const angle = Math.atan2(dy, dx);
+    const width = Math.max(18, Math.min(W, H) * 0.035);
+    drawBeam(pens.ice, src.x, src.y, angle + 0.004, dist, width * 1.4, 0.75);
+    drawBeam(pens.white, src.x, src.y, angle, dist, width * 0.7, 0.95);
+
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.globalAlpha = 1;
+    const r = 24;
+    const hg = ctx.createRadialGradient(pen.x, pen.y, 0, pen.x, pen.y, r);
+    hg.addColorStop(0, 'rgba(255,255,255,1)');
+    hg.addColorStop(0.25, rgba(COLORS.ice, 0.7));
+    hg.addColorStop(1, rgba(COLORS.ice, 0));
+    ctx.fillStyle = hg;
+    ctx.fillRect(pen.x - r, pen.y - r, r * 2, r * 2);
+
+    for (let i = 0; i < 2; i++) {
+      const a = rand() * TAU;
+      const v = 40 + rand() * 140;
+      sparks.push({ x: pen.x, y: pen.y, vx: Math.cos(a) * v, vy: Math.sin(a) * v - 40, life: 0.3 + rand() * 0.35, age: 0 });
+    }
+    if (sparks.length > 160) sparks.splice(0, sparks.length - 160);
+  }
+
+  function drawSparks(now) {
+    const dt = Math.min(0.05, (now - lastFrame) / 1000);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    for (let i = sparks.length - 1; i >= 0; i--) {
+      const p = sparks[i];
+      p.age += dt;
+      if (p.age >= p.life) {
+        sparks.splice(i, 1);
+        continue;
+      }
+      p.vy += 320 * dt;
+      p.x += p.vx * dt;
+      p.y += p.vy * dt;
+      const fade = 1 - p.age / p.life;
+      ctx.globalAlpha = fade;
+      ctx.fillStyle = fade > 0.6 ? '#ffffff' : rgba(COLORS.ice, 1);
+      ctx.fillRect(p.x - 1, p.y - 1, 2, 2);
+    }
+  }
+
   // A tap fires three beams at that spot; they flare and fade.
   function drawHits(now, src) {
     const len = Math.max(W, H) * 1.6;
@@ -401,6 +488,7 @@ export function createStage(canvas, { seed = 1, reducedMotion = false } = {}) {
 
   function loop(now) {
     draw(now);
+    lastFrame = now;
     raf = requestAnimationFrame(loop);
   }
 
@@ -415,10 +503,13 @@ export function createStage(canvas, { seed = 1, reducedMotion = false } = {}) {
       else raf = requestAnimationFrame(loop);
     },
     // Beams scan `target()` (a DOMRect) for `draw` seconds after `ignite`.
-    playIntro({ target, ignite = 0.5, draw: drawFor = 2.2 }) {
+    // Either `getPen(seconds)` (the beam follows the pen as it writes) or
+    // `target()` (beams scan a rectangle) for `draw` seconds after `ignite`.
+    playIntro({ getPen, target, ignite = 0.5, draw: drawFor = 2.2 }) {
       if (reducedMotion) return;
       intro = {
         start: performance.now(),
+        getPen,
         target,
         ignite,
         draw: drawFor,

@@ -1,6 +1,7 @@
 import { PARTY } from './config.js';
 import { readInvite, hashString, invitationNumber } from './invite-token.js';
 import { createStage } from './stage.js';
+import { loadLaserFont, canWrite, buildName, createWriter } from './laser-writer.js';
 
 const SVG_NS = 'http://www.w3.org/2000/svg';
 
@@ -99,15 +100,29 @@ function splitName(text) {
 }
 
 let renderedLines = '';
+let laserFont = null;
+
+// Draws the name as laser outlines when the font's outlines are available,
+// otherwise as plain SVG text. Returns the laser strokes, if any.
 function renderName(text) {
   const lines = splitName(text);
-  if (lines.join('\n') === renderedLines) return;
+  if (lines.join('\n') === renderedLines) return null;
   renderedLines = lines.join('\n');
 
   const svg = $('.name');
-  const el = svg.querySelector('.name__text');
   svg.style.setProperty('--lines', lines.length === 1 ? 1 : 1.75);
-  el.textContent = '';
+  $('[data-name-label]').textContent = text;
+
+  if (laserFont) {
+    svg.classList.add('is-laser');
+    const built = buildName(svg, laserFont, lines);
+    updateStrokeScale();
+    return built;
+  }
+
+  const el = document.createElementNS(SVG_NS, 'text');
+  el.setAttribute('class', 'name__text');
+  el.setAttribute('text-anchor', 'middle');
   lines.forEach((line, i) => {
     const span = document.createElementNS(SVG_NS, 'tspan');
     span.setAttribute('x', '0');
@@ -115,10 +130,19 @@ function renderName(text) {
     span.textContent = line;
     el.append(span);
   });
+  svg.replaceChildren(el);
   const box = el.getBBox();
   const pad = Math.max(10, box.height * 0.1);
   svg.setAttribute('viewBox', `${box.x - pad} ${box.y - pad} ${box.width + pad * 2} ${box.height + pad * 2}`);
-  $('[data-name-label]').textContent = text;
+  return null;
+}
+
+// Laser lines keep the same on-screen thickness whatever size the name is.
+function updateStrokeScale() {
+  const svg = $('.name');
+  const height = svg.getBoundingClientRect().height;
+  const viewHeight = svg.viewBox.baseVal?.height;
+  if (height && viewHeight) svg.style.setProperty('--u', viewHeight / height);
 }
 
 // ---------- Content ----------
@@ -313,10 +337,20 @@ function wireStage(stage) {
   }
 }
 
+const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
 async function fontsReady(text) {
   if (!document.fonts) return;
-  const timeout = new Promise((resolve) => setTimeout(resolve, 2500));
-  await Promise.race([document.fonts.load('800 100px Unbounded', text), timeout]);
+  await Promise.race([document.fonts.load('800 100px Unbounded', text), wait(2500)]);
+}
+
+async function laserFontFor(text) {
+  try {
+    const font = await Promise.race([loadLaserFont(), wait(3500).then(() => null)]);
+    return font && canWrite(font, text) ? font : null;
+  } catch {
+    return null;
+  }
 }
 
 async function main() {
@@ -334,18 +368,31 @@ async function main() {
   stage.start();
 
   const displayName = guest || 'you';
-  await fontsReady(displayName);
-  renderName(displayName);
-  window.addEventListener('resize', () => renderName(displayName));
+  const [font] = await Promise.all([laserFontFor(displayName), fontsReady(displayName)]);
+  laserFont = font;
+  const built = renderName(displayName);
+  window.addEventListener('resize', () => {
+    renderName(displayName);
+    updateStrokeScale();
+  });
 
   if (reducedMotion) {
     hero.classList.add('is-drawing', 'is-lit', 'is-ready');
     return;
   }
 
-  const ignite = 0.5;
-  const drawFor = 2.2;
-  stage.playIntro({ target: () => $('.name').getBoundingClientRect(), ignite, draw: drawFor });
+  // Longer names take a little longer to write.
+  const ignite = 0.6;
+  const letters = displayName.replace(/\s/g, '').length;
+  const drawFor = built ? Math.min(5, Math.max(2.6, 1.2 + letters * 0.32)) : 2.2;
+
+  if (built) {
+    const writer = createWriter($('.name'), built.strokes, built.lengths, drawFor);
+    stage.playIntro({ getPen: (seconds) => writer.update(seconds), ignite, draw: drawFor });
+    setTimeout(() => writer.finish(), (ignite + drawFor) * 1000);
+  } else {
+    stage.playIntro({ target: () => $('.name').getBoundingClientRect(), ignite, draw: drawFor });
+  }
   setTimeout(() => hero.classList.add('is-drawing'), ignite * 1000);
   setTimeout(() => hero.classList.add('is-lit'), (ignite + drawFor) * 1000);
   setTimeout(() => hero.classList.add('is-ready'), (ignite + drawFor + 0.4) * 1000);
