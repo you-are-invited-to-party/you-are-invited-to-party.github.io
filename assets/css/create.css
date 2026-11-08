@@ -150,3 +150,41 @@
   padding: 0 16px;
   font-size: 15px;
 }
+
+.maker__example {
+  color: var(--ink);
+  white-space: nowrap;
+}
+
+.maker__warning {
+  margin-top: 8px;
+  font-size: 14px;
+  color: var(--house);
+}
+
+/* How the message will look once pasted. */
+.link__preview {
+  margin-top: 12px;
+  padding: 12px 16px;
+  border-radius: 16px 16px 4px 16px;
+  background: rgba(124, 244, 255, 0.08);
+  font-family: var(--font-persian);
+  font-size: 16px;
+  line-height: 1.9;
+}
+
+.link__preview a {
+  color: var(--beam);
+}
+
+.button--accent {
+  color: var(--night);
+  font-weight: 600;
+  background: var(--beam);
+  border-color: var(--beam);
+}
+
+.button--accent:hover {
+  background: #a6f8ff;
+  border-color: #a6f8ff;
+}

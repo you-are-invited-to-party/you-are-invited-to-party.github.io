@@ -7,8 +7,11 @@ Live site: https://you-are-invited-to-party.github.io/
 ## Making invitation links
 
 1. Open https://you-are-invited-to-party.github.io/create/
-2. Write each guest's name in English, one per line, and press **Make links**.
-3. Copy each message or share it straight to WhatsApp.
+2. Write one guest per line, English name then Persian name, like `Sara سارا`, and press **Make links**. The English name goes in the link (the lasers draw it); the Persian name goes in the greeting.
+3. Each guest gets a Persian message, «سلام سارا جان! پنج‌شنبه ۲۸ آبان ساعت ۶ تولدمه، خیلی خوشحال می‌شم بیای 🎉», ending in «کارت دعوتت اینجاست»:
+   - **Copy for Telegram** copies it as rich text with «کارت دعوتت اینجاست» linked to the invitation.
+   - **Copy for WhatsApp** copies plain text with the link on its own line (WhatsApp can't hide links behind text).
+   - **Share** opens your phone's share menu.
 
 Each link is just the site address with the guest's name after `?`, for example `https://you-are-invited-to-party.github.io/?Sara` or `https://you-are-invited-to-party.github.io/?Ali+Rezaei` (use `+` for spaces). You can also type these by hand.
 
