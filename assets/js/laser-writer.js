@@ -10,8 +10,8 @@ let fontPromise = null;
 
 export function loadLaserFont() {
   fontPromise ??= Promise.all([
-    import('../vendor/opentype.module.min.js'),
-    fetch(new URL('../fonts/unbounded-800-latin.ttf', import.meta.url)).then((res) => {
+    import('../vendor/opentype.module.min.js?v=1630f65e'),
+    fetch(new URL('../fonts/unbounded-800-latin.ttf?v=3fd32fa3', import.meta.url)).then((res) => {
       if (!res.ok) throw new Error(`Font request failed: ${res.status}`);
       return res.arrayBuffer();
     }),

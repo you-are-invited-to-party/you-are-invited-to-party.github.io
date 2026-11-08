@@ -1,8 +1,8 @@
-import { PARTY } from './config.js';
-import { readInvite, hashString, invitationNumber } from './invite-token.js';
-import { createStage, mulberry32 } from './stage.js';
-import { buildCrowd } from './crowd.js';
-import { loadLaserFont, canWrite, buildName, createWriter } from './laser-writer.js';
+import { PARTY } from './config.js?v=0d9be427';
+import { readInvite, hashString, invitationNumber } from './invite-token.js?v=a2b1d497';
+import { createStage, mulberry32 } from './stage.js?v=5dd3851e';
+import { buildCrowd } from './crowd.js?v=180b4c3c';
+import { loadLaserFont, canWrite, buildName, createWriter } from './laser-writer.js?v=04e66e55';
 
 const SVG_NS = 'http://www.w3.org/2000/svg';
 

@@ -2,7 +2,7 @@
 // thrown from one projector point. A seed picks the cue order and timing, so
 // every guest gets a slightly different show.
 
-import { createScene } from './scene.js';
+import { createScene } from './scene.js?v=8a762604';
 
 const TAU = Math.PI * 2;
 const UP = -Math.PI / 2;

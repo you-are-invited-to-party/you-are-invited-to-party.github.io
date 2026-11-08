@@ -1,5 +1,5 @@
-import { PARTY } from './config.js';
-import { cleanName, inviteLink, invitationNumber } from './invite-token.js';
+import { PARTY } from './config.js?v=0d9be427';
+import { cleanName, inviteLink, invitationNumber } from './invite-token.js?v=a2b1d497';
 
 const STORAGE_KEY = 'invite-maker-names';
 const LINK_TEXT = 'کارت دعوتت اینجاست';

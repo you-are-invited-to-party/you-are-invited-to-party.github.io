@@ -35,6 +35,14 @@ Edit [`assets/js/config.js`](assets/js/config.js):
 
 The Apple Calendar file is [`party.ics`](party.ics). If you change the date or time, update `DTSTART` and `DTEND` there too (they're in UTC; Tehran is UTC+3:30).
 
+## Publishing changes
+
+GitHub Pages lets browsers keep files for 10 minutes. So that a guest never gets a new page with old scripts, every script, stylesheet and asset reference carries a content stamp (`?v=…`). After editing any file, re-stamp before committing:
+
+```bash
+python3 tools/stamp.py
+```
+
 ## Running locally
 
 ```bash
