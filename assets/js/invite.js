@@ -1,6 +1,7 @@
 import { PARTY } from './config.js';
 import { readInvite, hashString, invitationNumber } from './invite-token.js';
-import { createStage } from './stage.js';
+import { createStage, mulberry32 } from './stage.js';
+import { buildCrowd } from './crowd.js';
 import { loadLaserFont, canWrite, buildName, createWriter } from './laser-writer.js';
 
 const SVG_NS = 'http://www.w3.org/2000/svg';
@@ -320,6 +321,8 @@ function wireStage(stage) {
     const r = rig.getBoundingClientRect();
     return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
   });
+  // The club (ceiling, truss, mirror ball, wall meters) belongs to the first screen.
+  stage.setScene(() => hero.getBoundingClientRect());
 
   const details = $('.details');
   const night = $('.night');
@@ -367,7 +370,9 @@ async function main() {
   if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
   if (!location.hash) window.scrollTo(0, 0);
 
-  const stage = createStage($('.stage'), { seed: hashString(guest || 'guest'), reducedMotion });
+  const seed = hashString(guest || 'guest');
+  const stage = createStage($('.stage'), { seed, reducedMotion });
+  buildCrowd($('.crowd'), mulberry32(seed + 5));
   fillDetails();
   fillTapes();
   startCountdown();

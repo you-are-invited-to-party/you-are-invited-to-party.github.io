@@ -2,6 +2,8 @@
 // thrown from one projector point. A seed picks the cue order and timing, so
 // every guest gets a slightly different show.
 
+import { createScene } from './scene.js';
+
 const TAU = Math.PI * 2;
 const UP = -Math.PI / 2;
 
@@ -191,6 +193,8 @@ export function createStage(canvas, { seed = 1, reducedMotion = false } = {}) {
   let aim = 0;
   let aimTarget = 0;
   let sourceProvider = () => ({ x: W / 2, y: H * 0.86 });
+  let sceneProvider = null;
+  const drawScene = createScene(mulberry32(seed + 3));
   let intro = null;
   const hits = [];
 
@@ -321,6 +325,14 @@ export function createStage(canvas, { seed = 1, reducedMotion = false } = {}) {
     drawHaze(haze.blue, t, (1 - redShare) * (0.55 + 0.45 * washLevel));
     drawHaze(haze.red, t, redShare * (0.55 + 0.45 * washLevel));
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+    // The room: ceiling, truss, mirror ball, wall meters. Dim while the name is written.
+    const room = sceneProvider && sceneProvider();
+    if (room) {
+      drawScene(ctx, { t, W, top: room.top, height: room.height, dpr, level: intro ? 0.3 + 0.7 * showAlpha : 1 });
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.globalAlpha = 1;
+    }
 
     // Beams.
     const beamLevel = showAlpha * showLevel;
@@ -518,6 +530,11 @@ export function createStage(canvas, { seed = 1, reducedMotion = false } = {}) {
     },
     setSource(fn) {
       sourceProvider = fn;
+      if (reducedMotion) draw(performance.now());
+    },
+    // `fn()` returns the rectangle the room is drawn into (the first screen).
+    setScene(fn) {
+      sceneProvider = fn;
       if (reducedMotion) draw(performance.now());
     },
     setHouse(value) {

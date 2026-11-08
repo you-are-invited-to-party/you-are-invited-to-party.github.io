@@ -247,6 +247,46 @@ main {
   color: var(--magenta);
 }
 
+.hero__copy,
+.hero__bottom {
+  position: relative;
+  z-index: 1;
+}
+
+/* Dancers between the lasers and the cake, bobbing to the beat. */
+.crowd {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  z-index: 0;
+  width: 100%;
+  height: clamp(150px, 25vh, 260px);
+  pointer-events: none;
+}
+
+.crowd__person {
+  animation: bob 0.52s ease-in-out var(--delay, 0s) infinite alternate;
+}
+
+@keyframes bob {
+  to {
+    transform: translateY(calc(var(--lift, 4px) * -1));
+  }
+}
+
+.hero.is-armed .crowd {
+  opacity: 0;
+  transition: opacity 1.2s ease;
+}
+
+.hero.is-armed.is-powered .crowd {
+  opacity: 0.6;
+}
+
+.hero.is-armed.is-lit .crowd {
+  opacity: 1;
+}
+
 .hero__bottom {
   display: grid;
   justify-items: center;
@@ -272,7 +312,11 @@ main {
 
 .cake .cake__body {
   stroke: var(--beam);
-  fill: rgba(124, 244, 255, 0.07);
+  fill: #0a0a2e;
+}
+
+.cake .cake__candle {
+  fill: #0a0a2e;
 }
 
 .cake__icing {
