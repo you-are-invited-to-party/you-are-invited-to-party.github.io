@@ -19,7 +19,7 @@ Every invitation is unique: a laser writes the guest's name stroke by stroke, th
 
 ## RSVP
 
-At the bottom of each invitation guests answer **Will you be there?**: *Yes, I'll be there*, *Not sure yet* or *I can't make it*. Only a sure yes shows the **Join the Telegram group** button (the link is `telegram` in `config.js`). The answer is remembered on the guest's phone.
+Guests answer **Will you be there?**: *I'm in*, *Not sure yet* or *Can't make it*. The question floats in a bar at the bottom of the screen as soon as their name has been written, so nobody has to scroll to find it, and it's repeated in a panel at the end of the page (the bar steps aside there). Only a sure yes shows the **Join the Telegram group** button (the link is `telegram` in `config.js`). The answer is remembered on the guest's phone.
 
 Every answer is also sent to the **Party RSVPs** Google Sheet in the host's Google Drive (tab **RSVPs**): one row per guest with their answer, when they last answered, and how many times they changed it. The site posts to the Apps Script web app in `rsvpSheet` (`config.js`); its code is in [`tools/rsvp-sheet.gs`](tools/rsvp-sheet.gs). Guests in Iran without a VPN may not reach Google, so a few answers might be missing from the sheet.
 

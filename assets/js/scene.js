@@ -66,7 +66,8 @@ export function createScene(rand) {
   }
 
   function drawFixtures(ctx, t, W, H, top, ceil, level) {
-    const n = clamp(Math.round(W / 210), 3, 7);
+    // Two lights on phones keep the middle of the truss clear for the text.
+    const n = clamp(Math.round(W / 190), 2, 7);
     for (let i = 0; i < n; i++) {
       const color = i % 2 ? MAGENTA : ICE;
       const tilt = Math.sin(t * 0.5 + i * 1.9) * 0.55;
@@ -209,7 +210,7 @@ export function createScene(rand) {
     drawMeters(ctx, t, W, top, height, level);
     drawFixtures(ctx, t, W, height, top, ceil, level);
     const r = clamp(Math.min(W, height) * 0.045, 14, 34);
-    drawMirrorBall(ctx, t, W * 0.84, top + ceil + 12 + height * 0.022 + r, r, top + ceil + 12, level);
+    drawMirrorBall(ctx, t, W * 0.84, top + ceil + 16 + r, r, top + ceil + 12, level);
     ctx.globalCompositeOperation = 'lighter';
   };
 }

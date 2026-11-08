@@ -113,7 +113,7 @@ main {
   min-height: 100svh;
   display: grid;
   grid-template-rows: 1fr auto;
-  padding: calc(env(safe-area-inset-top) + 48px) var(--gutter) calc(env(safe-area-inset-bottom) + 20px);
+  padding: calc(env(safe-area-inset-top) + 48px) var(--gutter) calc(env(safe-area-inset-bottom) + 20px + var(--bar-h, 0px));
   text-align: center;
   cursor: crosshair;
   -webkit-tap-highlight-color: transparent;
@@ -1067,11 +1067,142 @@ main {
   margin-top: 22px;
 }
 
+/* ---------- Floating RSVP bar ---------- */
+
+/* On phones the bar takes the place of the scroll hint at the bottom of the first screen. */
+@media (max-width: 639px) {
+  .hero__cue {
+    display: none;
+  }
+}
+
+.rsvp-bar {
+  position: fixed;
+  left: 50%;
+  bottom: calc(env(safe-area-inset-bottom) + 12px);
+  z-index: 15;
+  width: min(calc(100vw - 24px), 580px);
+  padding: 12px 14px;
+  border: 1px solid var(--glass-line);
+  border-radius: 22px;
+  background: rgba(12, 10, 46, 0.74);
+  -webkit-backdrop-filter: blur(18px) saturate(160%);
+  backdrop-filter: blur(18px) saturate(160%);
+  box-shadow: 0 18px 50px -14px rgba(0, 0, 0, 0.75), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  transform: translate(-50%, calc(100% + 40px));
+  opacity: 0;
+  visibility: hidden;
+  transition: transform 550ms cubic-bezier(0.2, 0.8, 0.2, 1), opacity 300ms ease, visibility 0s linear 550ms;
+}
+
+.rsvp-bar.is-shown {
+  transform: translate(-50%, 0);
+  opacity: 1;
+  visibility: visible;
+  transition-delay: 0s;
+}
+
+.rsvp-bar__question {
+  margin-bottom: 8px;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 15px;
+  text-align: center;
+}
+
+.rsvp-bar__choices {
+  display: grid;
+  grid-template-columns: 1fr 1.15fr 1.15fr;
+  gap: 6px;
+}
+
+.rsvp-bar__choice {
+  min-height: 44px;
+  padding: 0 8px;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.rsvp-bar__choice--yes {
+  color: var(--night);
+  font-weight: 600;
+  background: var(--beam);
+  border-color: var(--beam);
+}
+
+.rsvp-bar__choice--yes:hover {
+  background: #a6f8ff;
+  border-color: #a6f8ff;
+}
+
+/* When the bar first slides in, the yes button glows twice to catch the eye. */
+.rsvp-bar.is-shown .rsvp-bar__choice--yes {
+  animation: rsvp-glow 1.4s ease-in-out 0.6s 2;
+}
+
+@keyframes rsvp-glow {
+  50% {
+    box-shadow: 0 0 0 5px rgba(124, 244, 255, 0.18), 0 0 26px rgba(124, 244, 255, 0.6);
+  }
+}
+
+.rsvp-bar__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.rsvp-bar__status {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.rsvp-bar__change {
+  min-height: 44px;
+  padding: 0 4px;
+  font: inherit;
+  font-size: 14px;
+  color: var(--mist);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+.rsvp-bar__change:hover {
+  color: var(--ink);
+}
+
+.rsvp-bar__telegram {
+  width: 100%;
+  margin-top: 6px;
+}
+
+@media (min-width: 640px) {
+  .rsvp-bar__ask {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .rsvp-bar__question {
+    margin: 0;
+    white-space: nowrap;
+  }
+
+  .rsvp-bar__choices {
+    flex: 1;
+  }
+}
+
 /* ---------- Footer & toast ---------- */
 
 .footer {
   position: relative;
-  padding: 8px var(--gutter) calc(env(safe-area-inset-bottom) + 40px);
+  padding: 8px var(--gutter) calc(env(safe-area-inset-bottom) + 40px + var(--bar-h, 0px));
   text-align: center;
   font-size: 14px;
   color: var(--mist);
@@ -1080,7 +1211,7 @@ main {
 .toast {
   position: fixed;
   left: 50%;
-  bottom: calc(env(safe-area-inset-bottom) + 24px);
+  bottom: calc(env(safe-area-inset-bottom) + 24px + var(--bar-h, 0px));
   z-index: 10;
   padding: 12px 20px;
   font-size: 15px;

@@ -296,81 +296,113 @@ async function copyAddress() {
 
 // ---------- RSVP ----------
 
-// Only a sure yes leads to the Telegram group. The answer is remembered on the
-// guest's phone, so it's still there when they come back.
+// The question lives in two places that share one answer: a bar floating at
+// the bottom of the screen, so nobody misses it, and the panel at the end of
+// the page. Only a sure yes leads to the Telegram group. The answer is
+// remembered on the guest's phone and sent to the host's Google Sheet.
 function wireRsvp(stage) {
   const key = `rsvp:${guest || 'guest'}`;
-  const choices = $('[data-rsvp-choices]');
-  const result = $('[data-rsvp-result]');
-  const message = $('[data-rsvp-message]');
-  const telegram = $('[data-telegram]');
+  const panel = $('.rsvp');
+  const bar = $('[data-rsvp-bar]');
   const firstName = guest ? guest.split(' ')[0] : '';
 
   const messages = {
     yes: PARTY.telegram
-      ? "Amazing, see you there! Join the party group on Telegram for updates and to plan the night."
+      ? 'Amazing, see you there! Join the party group on Telegram for updates and to plan the night.'
       : 'Amazing, see you there!',
-    maybe: "No pressure. Come back and tap \"Yes, I'll be there\" once you know, and you'll get the link to the party group.",
+    maybe: "No pressure. Come back and tap \"I'm in\" once you know, and you'll get the link to the party group.",
     no: `We'll miss you${firstName ? `, ${firstName}` : ''}. If your plans change, you can answer again here.`,
   };
+  const statuses = { yes: "You're in! 🎉", maybe: "You're not sure yet", no: "You can't make it" };
 
-  const show = (answer) => {
-    choices.hidden = Boolean(answer);
-    result.hidden = !answer;
-    if (!answer) return;
-    message.textContent = messages[answer];
-    telegram.hidden = !(answer === 'yes' && PARTY.telegram);
-    if (PARTY.telegram) telegram.href = PARTY.telegram;
+  let answer = null;
+
+  const render = () => {
+    $('[data-rsvp-choices]').hidden = Boolean(answer);
+    $('[data-rsvp-result]').hidden = !answer;
+    $('[data-bar-ask]').hidden = Boolean(answer);
+    $('[data-bar-done]').hidden = !answer;
+    if (answer) {
+      $('[data-rsvp-message]').textContent = messages[answer];
+      $('[data-bar-status]').textContent = statuses[answer];
+    }
+    document.querySelectorAll('[data-telegram]').forEach((link) => {
+      link.hidden = !(answer === 'yes' && PARTY.telegram);
+      if (PARTY.telegram) link.href = PARTY.telegram;
+    });
   };
 
   // Sends the answer to the host's Google Sheet. Fire and forget: the page
   // can't read the reply (Google answers from another domain), and the guest's
   // answer on screen doesn't depend on it.
-  const report = (answer) => {
+  const report = (value) => {
     if (!PARTY.rsvpSheet) return;
     fetch(PARTY.rsvpSheet, {
       method: 'POST',
       mode: 'no-cors',
       keepalive: true,
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify({ name: guest, answer }),
+      body: JSON.stringify({ name: guest, answer: value }),
     }).catch(() => {});
   };
 
-  const save = (answer) => {
+  const save = (value) => {
     try {
-      if (answer) localStorage.setItem(key, answer);
+      if (value) localStorage.setItem(key, value);
       else localStorage.removeItem(key);
     } catch {}
   };
 
-  choices.addEventListener('click', (e) => {
-    const button = e.target.closest('[data-answer]');
-    if (!button) return;
-    const answer = button.dataset.answer;
+  const choose = (value, button) => {
     // A yes gets a quick burst of lasers aimed at the button.
-    if (answer === 'yes' && !reducedMotion) {
+    if (value === 'yes' && button && !reducedMotion) {
       const r = button.getBoundingClientRect();
       for (let i = 0; i < 5; i++) {
         setTimeout(() => stage.hit(r.left + r.width * (0.2 + 0.15 * i), r.top + r.height / 2), i * 90);
       }
     }
-    save(answer);
-    show(answer);
-    report(answer);
+    answer = value;
+    save(value);
+    render();
+    if (value) report(value);
+  };
+
+  document.querySelectorAll('[data-answer]').forEach((button) => {
+    button.addEventListener('click', () => choose(button.dataset.answer, button));
+  });
+  document.querySelectorAll('[data-rsvp-change]').forEach((button) => {
+    button.addEventListener('click', () => {
+      choose(null);
+      (bar.contains(button) ? bar : panel).querySelector('[data-answer]').focus();
+    });
   });
 
-  $('[data-rsvp-change]').addEventListener('click', () => {
-    save(null);
-    show(null);
-    choices.querySelector('[data-answer]').focus();
-  });
-
-  let stored = null;
   try {
-    stored = localStorage.getItem(key);
+    const stored = localStorage.getItem(key);
+    if (['yes', 'maybe', 'no'].includes(stored)) answer = stored;
   } catch {}
-  show(['yes', 'maybe', 'no'].includes(stored) ? stored : null);
+  render();
+
+  // Leave room for the bar so it never covers the cake, the end of the page or a toast.
+  const measure = () => document.documentElement.style.setProperty('--bar-h', `${bar.offsetHeight + 12}px`);
+  if ('ResizeObserver' in window) new ResizeObserver(measure).observe(bar);
+  measure();
+
+  // The bar slides in once the name has been written, and steps aside while
+  // the panel itself is on screen so the question never shows twice.
+  let ready = false;
+  let panelInView = false;
+  const update = () => bar.classList.toggle('is-shown', ready && !panelInView);
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(([entry]) => {
+      panelInView = entry.isIntersecting;
+      update();
+    }, { threshold: 0.3 }).observe(panel);
+  }
+  return () => {
+    ready = true;
+    update();
+  };
 }
 
 // ---------- Show ----------
@@ -454,7 +486,7 @@ async function main() {
   startCountdown();
   $('[data-copy]').addEventListener('click', copyAddress);
   wireStage(stage);
-  wireRsvp(stage);
+  const showRsvpBar = wireRsvp(stage);
   revealNights();
   stage.start();
 
@@ -469,6 +501,7 @@ async function main() {
 
   if (reducedMotion) {
     hero.classList.add('is-powered', 'is-drawing', 'is-lit', 'is-ready');
+    showRsvpBar();
     return;
   }
 
@@ -489,6 +522,7 @@ async function main() {
   setTimeout(() => hero.classList.add('is-drawing'), ignite * 1000);
   setTimeout(() => hero.classList.add('is-lit'), (ignite + drawFor) * 1000);
   setTimeout(() => hero.classList.add('is-ready'), (ignite + drawFor + 0.4) * 1000);
+  setTimeout(showRsvpBar, (ignite + drawFor + 1.2) * 1000);
 }
 
 main();

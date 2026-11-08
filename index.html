@@ -136,9 +136,9 @@
         <article class="panel rsvp" aria-labelledby="rsvp-title">
           <h2 class="rsvp__title" id="rsvp-title">Will you be there?</h2>
           <div class="rsvp__choices" role="group" aria-labelledby="rsvp-title" data-rsvp-choices>
-            <button class="button rsvp__choice" type="button" data-answer="yes">Yes, I'll be there</button>
+            <button class="button rsvp__choice" type="button" data-answer="yes">I'm in</button>
             <button class="button rsvp__choice" type="button" data-answer="maybe">Not sure yet</button>
-            <button class="button rsvp__choice" type="button" data-answer="no">I can't make it</button>
+            <button class="button rsvp__choice" type="button" data-answer="no">Can't make it</button>
           </div>
           <div class="rsvp__result" data-rsvp-result hidden>
             <p class="rsvp__message" data-rsvp-message aria-live="polite"></p>
@@ -155,6 +155,26 @@
       <p data-footer></p>
     </footer>
   </main>
+
+  <!-- The RSVP question floats at the bottom of the screen so nobody misses it.
+       It shares its answer with the panel at the end of the page. -->
+  <aside class="rsvp-bar" data-rsvp-bar aria-labelledby="rsvp-bar-question">
+    <div class="rsvp-bar__ask" data-bar-ask>
+      <p class="rsvp-bar__question" id="rsvp-bar-question">Will you be there?</p>
+      <div class="rsvp-bar__choices" role="group" aria-labelledby="rsvp-bar-question">
+        <button class="button rsvp-bar__choice rsvp-bar__choice--yes" type="button" data-answer="yes">I'm in</button>
+        <button class="button rsvp-bar__choice" type="button" data-answer="maybe">Not sure yet</button>
+        <button class="button rsvp-bar__choice" type="button" data-answer="no">Can't make it</button>
+      </div>
+    </div>
+    <div class="rsvp-bar__done" data-bar-done hidden>
+      <div class="rsvp-bar__row">
+        <p class="rsvp-bar__status" data-bar-status aria-live="polite"></p>
+        <button class="rsvp-bar__change" type="button" data-rsvp-change>Change</button>
+      </div>
+      <a class="button button--primary rsvp-bar__telegram" data-telegram target="_blank" rel="noopener" hidden><span>Join the Telegram group</span></a>
+    </div>
+  </aside>
 
   <div class="toast" role="status" aria-live="polite"></div>
 </body>
