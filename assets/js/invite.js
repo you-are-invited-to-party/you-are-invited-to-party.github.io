@@ -150,9 +150,6 @@ function updateStrokeScale() {
 
 function fillDetails() {
   document.title = guest ? `${guest}, you're invited` : "You're invited to a birthday party";
-  $('[data-to-party]').textContent = PARTY.host
-    ? `You're invited to ${PARTY.host}'s birthday party.`
-    : "You're invited to a birthday party.";
 
   const dates = formatDates();
   $('[data-date-short]').textContent = PARTY.startTime ? `${dates.short}, ${formatTime(PARTY.startTime)}` : dates.short;
