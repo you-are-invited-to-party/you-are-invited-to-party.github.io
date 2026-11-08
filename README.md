@@ -12,7 +12,7 @@ Live site: https://you-are-invited-to-party.github.io/
 
 Each link is just the site address with the guest's name after `?`, for example `https://you-are-invited-to-party.github.io/?Sara` or `https://you-are-invited-to-party.github.io/?Ali+Rezaei` (use `+` for spaces). You can also type these by hand.
 
-Every invitation is unique: a laser writes the guest's name stroke by stroke, the light show's running order comes from the name, and the footer shows an invitation number. Tapping the stage fires the lasers at that spot.
+Every invitation is unique: a laser writes the guest's name stroke by stroke, the light show's running order comes from the name, and the footer shows an invitation number. A neon birthday cake sits at the bottom of the first screen and every beam comes out of its middle candle. Tapping the stage fires the lasers at that spot.
 
 ## Changing party details
 

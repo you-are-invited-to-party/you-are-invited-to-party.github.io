@@ -313,7 +313,8 @@ function revealNights() {
 }
 
 function wireStage(stage) {
-  const rig = $('.hero__rig');
+  // Every beam comes out of the cake's middle candle.
+  const rig = $('.cake__rig');
   stage.setSource(() => {
     const r = rig.getBoundingClientRect();
     return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
@@ -377,12 +378,14 @@ async function main() {
   });
 
   if (reducedMotion) {
-    hero.classList.add('is-drawing', 'is-lit', 'is-ready');
+    hero.classList.add('is-powered', 'is-drawing', 'is-lit', 'is-ready');
     return;
   }
 
+  // The cake powers up first; the laser fires from its candle once it's lit.
+  hero.classList.add('is-powered');
+  const ignite = 0.9;
   // Longer names take a little longer to write.
-  const ignite = 0.6;
   const letters = displayName.replace(/\s/g, '').length;
   const drawFor = built ? Math.min(5, Math.max(2.6, 1.2 + letters * 0.32)) : 2.2;
 

@@ -242,14 +242,14 @@ export function createStage(canvas, { seed = 1, reducedMotion = false } = {}) {
     const base = Math.min(W, H);
     const wob = Math.sin(t * 1.3) * base * 0.01;
     const blobs = [
-      [src.x - base * 0.07 + wob, src.y - base * 0.015, base * 0.13],
-      [src.x + base * 0.07 - wob, src.y - base * 0.01, base * 0.11],
-      [src.x, src.y, base * 0.2],
+      [src.x - base * 0.05 + wob, src.y - base * 0.015, base * 0.08],
+      [src.x + base * 0.05 - wob, src.y - base * 0.01, base * 0.07],
+      [src.x, src.y, base * 0.14],
     ];
     for (const [x, y, r] of blobs) {
       const g = ctx.createRadialGradient(x, y, 0, x, y, r);
-      g.addColorStop(0, rgba([255, 255, 255], 0.5 * alpha));
-      g.addColorStop(0.25, rgba(color, 0.45 * alpha));
+      g.addColorStop(0, rgba([255, 255, 255], 0.4 * alpha));
+      g.addColorStop(0.25, rgba(color, 0.35 * alpha));
       g.addColorStop(1, rgba(color, 0));
       ctx.fillStyle = g;
       ctx.fillRect(x - r, y - r, r * 2, r * 2);

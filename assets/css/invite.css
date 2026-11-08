@@ -119,7 +119,7 @@ main {
   display: grid;
   justify-items: center;
   gap: 12px;
-  padding-bottom: 16vh;
+  padding-block: 8px 3vh;
   text-shadow: 0 1px 14px rgba(5, 4, 26, 0.85);
 }
 
@@ -247,12 +247,130 @@ main {
   color: var(--magenta);
 }
 
-.hero__rig {
-  position: absolute;
-  left: 50%;
-  bottom: calc(env(safe-area-inset-bottom) + 104px);
-  width: 2px;
-  height: 2px;
+.hero__bottom {
+  display: grid;
+  justify-items: center;
+  gap: 4px;
+}
+
+/* The neon cake: tubes of light, three flickering flames, and the middle
+   flame doubling as the laser projector. */
+.cake {
+  display: block;
+  width: clamp(140px, 40vw, 210px);
+  height: auto;
+  overflow: visible;
+  filter: drop-shadow(0 0 3px rgba(124, 244, 255, 0.7)) drop-shadow(0 0 16px rgba(255, 59, 212, 0.35));
+}
+
+.cake__lines * {
+  fill: none;
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.cake .cake__body {
+  stroke: var(--beam);
+  fill: rgba(124, 244, 255, 0.07);
+}
+
+.cake__icing {
+  stroke: var(--magenta);
+}
+
+.cake__candle {
+  stroke: var(--ink);
+}
+
+.cake__candle--pink {
+  stroke: var(--magenta);
+}
+
+.cake .cake__stripes,
+.cake .cake__wick {
+  stroke: var(--ink);
+  stroke-width: 1.4;
+  opacity: 0.8;
+}
+
+.cake .cake__sprinkles {
+  stroke: var(--house);
+  stroke-width: 3.2;
+  stroke-dasharray: 0 10;
+}
+
+.cake__plate {
+  stroke: var(--ink);
+}
+
+.cake .cake__plate--soft {
+  opacity: 0.4;
+}
+
+.cake__flame {
+  fill: var(--house);
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  animation: flicker 1.3s ease-in-out infinite alternate;
+}
+
+.cake__flame:nth-child(2) {
+  animation-duration: 1.05s;
+  animation-delay: -0.4s;
+}
+
+.cake__flame:nth-child(3) {
+  animation-duration: 1.5s;
+  animation-delay: -0.8s;
+}
+
+.cake__core {
+  fill: #fff;
+}
+
+.cake__rig {
+  fill: none;
+}
+
+@keyframes flicker {
+  0% {
+    transform: scale(1, 1) rotate(-3deg);
+  }
+  50% {
+    transform: scale(0.9, 1.1) rotate(2deg);
+  }
+  100% {
+    transform: scale(1.05, 0.94) rotate(-1deg);
+  }
+}
+
+/* The cake powers up like neon before the laser fires from its middle candle. */
+.hero.is-armed .cake {
+  opacity: 0;
+}
+
+.hero.is-armed.is-powered .cake {
+  opacity: 1;
+  animation: neon-on 700ms linear;
+}
+
+.hero.is-armed .cake__flames {
+  opacity: 0;
+  transition: opacity 300ms ease 500ms;
+}
+
+.hero.is-armed.is-powered .cake__flames {
+  opacity: 1;
+}
+
+@keyframes neon-on {
+  0% { opacity: 0; }
+  15% { opacity: 0.8; }
+  25% { opacity: 0.1; }
+  40% { opacity: 0.9; }
+  50% { opacity: 0.35; }
+  100% { opacity: 1; }
 }
 
 .hero__cue {
@@ -819,12 +937,8 @@ main {
     font-size: 18px;
   }
 
-  .hero__rig {
-    bottom: calc(env(safe-area-inset-bottom) + 150px);
-  }
-
   .hero__copy {
-    padding-bottom: 20vh;
+    padding-bottom: 5vh;
   }
 
   .tapes {

@@ -46,11 +46,37 @@
         <p class="countdown__note" data-countdown-note hidden></p>
       </div>
 
-      <div class="hero__rig" aria-hidden="true"></div>
-      <a class="hero__cue" href="#details">
-        <span>See when and where</span>
-        <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </a>
+      <div class="hero__bottom">
+        <!-- A neon birthday cake. The middle flame is the laser projector. -->
+        <svg class="cake" viewBox="0 0 200 166" aria-hidden="true" focusable="false">
+          <g class="cake__flames">
+            <path class="cake__flame" d="M72 30c5 7 6 12 0 17c-6-5-5-10 0-17z"/>
+            <path class="cake__flame" d="M100 24c5 8 7 13 0 19c-7-6-5-11 0-19z"/>
+            <path class="cake__flame" d="M128 30c5 7 6 12 0 17c-6-5-5-10 0-17z"/>
+            <circle class="cake__core" cx="72" cy="42" r="2"/>
+            <circle class="cake__core" cx="100" cy="37" r="2.4"/>
+            <circle class="cake__core" cx="128" cy="42" r="2"/>
+          </g>
+          <g class="cake__lines">
+            <path class="cake__wick" d="M72 47v6M100 43v10M128 47v6"/>
+            <rect class="cake__candle cake__candle--pink" x="68" y="53" width="8" height="34" rx="3"/>
+            <rect class="cake__candle" x="96" y="53" width="8" height="34" rx="3"/>
+            <rect class="cake__candle cake__candle--pink" x="124" y="53" width="8" height="34" rx="3"/>
+            <path class="cake__stripes" d="M68 64l8-5M68 74l8-5M68 84l8-5M96 64l8-5M96 74l8-5M96 84l8-5M124 64l8-5M124 74l8-5M124 84l8-5"/>
+            <rect class="cake__body" x="34" y="87" width="132" height="58" rx="10"/>
+            <path class="cake__icing" d="M34 99C38 111 48 113 52 101C56 117 68 119 72 102C76 111 86 113 90 101C94 121 106 121 110 102C114 111 124 113 128 101C132 117 144 119 148 102C152 109 160 111 166 99"/>
+            <path class="cake__sprinkles" d="M50 128H150"/>
+            <path class="cake__plate" d="M14 151H186"/>
+            <path class="cake__plate cake__plate--soft" d="M34 159H166"/>
+          </g>
+          <circle class="cake__rig" cx="100" cy="33" r="1"/>
+        </svg>
+
+        <a class="hero__cue" href="#details">
+          <span>See when and where</span>
+          <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
     </section>
 
     <div class="tapes" aria-hidden="true">
