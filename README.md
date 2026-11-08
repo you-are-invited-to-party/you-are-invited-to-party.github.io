@@ -2,17 +2,17 @@
 
 A personal birthday invitation for each guest. When a guest opens their link, a laser rig draws their name, then fans out into a light show. Scrolling down dims the lasers and brings up the house lights for the date, the countdown and the directions.
 
-Live site: https://you-are-invited-to-party.github.io/you-are-invited-to-party/
+Live site: https://you-are-invited-to-party.github.io/
 
 ## Making invitation links
 
-1. Open https://you-are-invited-to-party.github.io/you-are-invited-to-party/create/
+1. Open https://you-are-invited-to-party.github.io/create/
 2. Write each guest's name in English, one per line, and press **Make links**.
 3. Copy each message or share it straight to WhatsApp.
 
-Each link carries the guest's name, so every invitation is unique: the name is drawn by the lasers, the light show's running order is seeded from the name, and the footer shows an invitation number.
+Each link is just the site address with the guest's name after `?`, for example `https://you-are-invited-to-party.github.io/?Sara` or `https://you-are-invited-to-party.github.io/?Ali+Rezaei` (use `+` for spaces). You can also type these by hand.
 
-You can also write a link by hand: `.../?to=Sara`.
+Every invitation is unique: the lasers draw the guest's name, the light show's running order comes from the name, and the footer shows an invitation number. Tapping the stage fires the lasers at that spot.
 
 ## Changing party details
 
@@ -30,4 +30,4 @@ The Apple Calendar file is [`party.ics`](party.ics). If you change the date or t
 python3 -m http.server 8765
 ```
 
-Then open http://localhost:8765/?to=Sara
+Then open http://localhost:8765/?Sara

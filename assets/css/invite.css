@@ -6,13 +6,20 @@
   --magenta: #ff3bd4;
   --house: #ffc879;
   --hairline: rgba(163, 171, 220, 0.24);
+  --glass-line: rgba(255, 255, 255, 0.12);
 
   --font-display: "Unbounded", system-ui, sans-serif;
   --font-body: "Instrument Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-persian: "Vazirmatn", "Geeza Pro", "Noto Sans Arabic", sans-serif;
 
-  --gutter: clamp(20px, 5vw, 48px);
+  --gutter: clamp(16px, 5vw, 48px);
   color-scheme: dark;
+}
+
+@property --spin {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
 }
 
 *,
@@ -36,6 +43,18 @@ body {
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
+}
+
+/* Film grain over the whole room, like haze caught on camera. */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+  opacity: 0.09;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
 p,
@@ -89,39 +108,39 @@ main {
   min-height: 100svh;
   display: grid;
   grid-template-rows: 1fr auto;
-  padding: calc(env(safe-area-inset-top) + 64px) var(--gutter) calc(env(safe-area-inset-bottom) + 20px);
+  padding: calc(env(safe-area-inset-top) + 48px) var(--gutter) calc(env(safe-area-inset-bottom) + 20px);
   text-align: center;
+  cursor: crosshair;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .hero__copy {
   align-self: center;
-  text-shadow: 0 1px 14px rgba(5, 4, 26, 0.85);
   display: grid;
   justify-items: center;
-  gap: 14px;
-  padding-bottom: 14vh;
+  gap: 12px;
+  padding-bottom: 16vh;
+  text-shadow: 0 1px 14px rgba(5, 4, 26, 0.85);
 }
 
 .hero__for {
-  font-size: 17px;
-  font-weight: 300;
+  font-size: 16px;
   color: var(--mist);
-  letter-spacing: 0.01em;
 }
 
 .hero__name {
   width: 100%;
   display: grid;
   justify-items: center;
+  margin-block: 4px;
   font-weight: inherit;
 }
 
 .name {
   display: block;
-  width: min(92vw, 960px);
-  height: auto;
-  max-height: 34vh;
-  max-height: 34svh;
+  height: calc(clamp(56px, 10svh, 112px) * var(--lines, 1));
+  width: auto;
+  max-width: min(86vw, 760px);
   overflow: visible;
   filter: drop-shadow(0 0 4px rgba(124, 244, 255, 0.75)) drop-shadow(0 0 22px rgba(124, 244, 255, 0.35));
 }
@@ -138,7 +157,7 @@ main {
 }
 
 .hero__line {
-  font-size: clamp(19px, 2.4vw, 24px);
+  font-size: clamp(18px, 2.2vw, 22px);
   max-width: 30ch;
   text-wrap: balance;
 }
@@ -147,15 +166,91 @@ main {
   max-width: 22ch;
   text-wrap: balance;
   font-family: var(--font-display);
-  font-weight: 500;
-  font-size: clamp(20px, 2.6vw, 28px);
+  font-weight: 600;
+  font-size: clamp(18px, 2.2vw, 24px);
+  line-height: 1.35;
   color: var(--beam);
+}
+
+/* Live countdown: a frosted pill with a pulsing on-air light. */
+.countdown {
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(12px, 3vw, 22px);
+  margin-top: 14px;
+  padding: 10px 22px 10px 18px;
+  border: 1px solid var(--glass-line);
+  border-radius: 999px;
+  background: rgba(10, 8, 40, 0.38);
+  -webkit-backdrop-filter: blur(14px) saturate(150%);
+  backdrop-filter: blur(14px) saturate(150%);
+  text-shadow: none;
+}
+
+.countdown[hidden] {
+  display: none;
+}
+
+.countdown__live {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--magenta);
+  box-shadow: 0 0 12px var(--magenta);
+  animation: on-air 1.6s ease-in-out infinite;
+}
+
+@keyframes on-air {
+  50% {
+    opacity: 0.35;
+    box-shadow: 0 0 4px var(--magenta);
+  }
+}
+
+.countdown__unit {
+  display: grid;
+  justify-items: center;
+  line-height: 1.1;
+}
+
+.countdown__num {
+  display: inline-block;
+  min-width: 2ch;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(20px, 3vw, 28px);
+  font-variant-numeric: tabular-nums;
+}
+
+.countdown__num.is-ticking {
+  animation: tick 420ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+@keyframes tick {
+  from {
+    opacity: 0.2;
+    transform: translateY(-6px);
+    color: var(--beam);
+  }
+}
+
+.countdown__label {
+  font-size: 12px;
+  color: var(--mist);
+}
+
+.countdown__note {
+  margin-top: 14px;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 18px;
+  color: var(--magenta);
 }
 
 .hero__rig {
   position: absolute;
   left: 50%;
-  bottom: calc(env(safe-area-inset-bottom) + 108px);
+  bottom: calc(env(safe-area-inset-bottom) + 104px);
   width: 2px;
   height: 2px;
 }
@@ -172,6 +267,17 @@ main {
   color: var(--ink);
   text-decoration: none;
   opacity: 0.85;
+  cursor: pointer;
+}
+
+.hero__cue svg {
+  animation: nudge 2.4s ease-in-out infinite;
+}
+
+@keyframes nudge {
+  50% {
+    transform: translateY(4px);
+  }
 }
 
 .hero__cue:hover {
@@ -183,20 +289,40 @@ main {
 .hero.is-armed .hero__for,
 .hero.is-armed .hero__line,
 .hero.is-armed .hero__date,
+.hero.is-armed .countdown,
+.hero.is-armed .countdown__note,
 .hero.is-armed .hero__cue {
   opacity: 0;
-  transition: opacity 700ms ease;
+  transform: translateY(10px);
+  transition: opacity 700ms ease, transform 900ms cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 
 .hero.is-armed.is-ready .hero__for,
 .hero.is-armed.is-ready .hero__line,
-.hero.is-armed.is-ready .hero__date {
+.hero.is-armed.is-ready .hero__date,
+.hero.is-armed.is-ready .countdown,
+.hero.is-armed.is-ready .countdown__note {
   opacity: 1;
+  transform: none;
+}
+
+.hero.is-armed.is-ready .hero__line {
+  transition-delay: 120ms;
+}
+
+.hero.is-armed.is-ready .hero__date {
+  transition-delay: 240ms;
+}
+
+.hero.is-armed.is-ready .countdown,
+.hero.is-armed.is-ready .countdown__note {
+  transition-delay: 380ms;
 }
 
 .hero.is-armed.is-ready .hero__cue {
   opacity: 0.85;
-  transition-delay: 500ms;
+  transform: none;
+  transition-delay: 700ms;
 }
 
 .hero.is-armed .name__text {
@@ -225,6 +351,17 @@ main {
   transition: filter 600ms ease;
 }
 
+/* Once lit, the name hums like a neon tube. */
+.hero.is-ready .name {
+  animation: hum 4s ease-in-out 1.2s infinite;
+}
+
+@keyframes hum {
+  50% {
+    filter: drop-shadow(0 0 6px rgba(124, 244, 255, 0.9)) drop-shadow(0 0 34px rgba(124, 244, 255, 0.55));
+  }
+}
+
 /* A neon tube catching: two stutters, then it holds. */
 @keyframes ignite {
   0% { fill: rgba(238, 243, 255, 0); }
@@ -235,40 +372,110 @@ main {
   100% { fill: rgba(238, 243, 255, 1); }
 }
 
+/* ---------- Tapes ---------- */
+
+/* Two crossing LED tapes, like the light strips along the stage. */
+.tapes {
+  position: relative;
+  height: 150px;
+  margin-top: -40px;
+  overflow: hidden;
+}
+
+.tape {
+  position: absolute;
+  left: -10%;
+  width: 120%;
+  top: 62%;
+  padding: 11px 0;
+  transform: translateY(-50%) rotate(-3deg);
+  color: var(--night);
+  background: var(--beam);
+  box-shadow: 0 0 36px rgba(124, 244, 255, 0.45);
+}
+
+.tape--magenta {
+  top: 36%;
+  transform: translateY(-50%) rotate(3deg);
+  color: var(--ink);
+  background: var(--magenta);
+  box-shadow: 0 0 36px rgba(255, 59, 212, 0.5);
+}
+
+.tape__track {
+  display: flex;
+  width: max-content;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 1;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  animation: marquee 32s linear infinite;
+}
+
+.tape--magenta .tape__track {
+  animation-duration: 40s;
+  animation-direction: reverse;
+}
+
+.tape__track span {
+  padding-inline: 14px;
+}
+
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
 /* ---------- Details ---------- */
 
 .details {
   position: relative;
-  padding: 18vh var(--gutter) 72px;
-  background: linear-gradient(to bottom, rgba(5, 4, 26, 0), rgba(5, 4, 26, 0.78) 22%, rgba(5, 4, 26, 0.9));
+  padding: 40px var(--gutter) 72px;
 }
 
 .details__grid {
-  max-width: 1040px;
+  max-width: 1080px;
   margin: 0 auto;
   display: grid;
-  gap: 72px;
+  gap: 20px;
 }
 
 @media (min-width: 860px) {
   .details__grid {
     grid-template-columns: 1fr 1fr;
-    gap: 96px;
+    gap: 28px;
+    align-items: start;
   }
+}
+
+/* Frosted panels: the show keeps running behind the details. */
+.panel {
+  position: relative;
+  padding: clamp(24px, 4vw, 40px);
+  border: 1px solid var(--glass-line);
+  border-radius: 28px;
+  background: linear-gradient(160deg, rgba(34, 28, 110, 0.5), rgba(8, 6, 32, 0.62));
+  -webkit-backdrop-filter: blur(20px) saturate(150%);
+  backdrop-filter: blur(20px) saturate(150%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 40px 80px -40px rgba(0, 0, 0, 0.7);
 }
 
 .details__title {
   font-family: var(--font-display);
   font-weight: 500;
-  font-size: 22px;
+  font-size: 15px;
   color: var(--mist);
-  margin-bottom: 16px;
+  margin-bottom: 14px;
 }
 
 .when__date {
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: clamp(24px, 7vw, 34px);
+  font-size: clamp(24px, 6.4vw, 32px);
   line-height: 1.25;
   letter-spacing: -0.01em;
 }
@@ -277,38 +484,40 @@ main {
   display: block;
 }
 
-@media (min-width: 860px) {
-  .when__date {
-    font-size: clamp(28px, 3.1vw, 34px);
-  }
+.when__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+  margin-top: 8px;
+  font-size: 17px;
 }
 
-.when__alt,
 .when__time {
-  margin-top: 6px;
-  font-size: 18px;
+  color: var(--beam);
+  font-weight: 600;
+}
+
+.when__time[hidden] {
+  display: none;
+}
+
+.when__alt {
   color: var(--mist);
 }
 
-.when__time {
-  color: var(--ink);
-}
-
-/* One LED bar per night left; the last one is the party. */
+/* One LED bar per night left; a light runs along them to the party night. */
 .nights {
-  margin-top: 32px;
+  margin-top: 28px;
 }
 
 .nights__bars {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  max-width: 420px;
+  display: grid;
+  grid-template-columns: repeat(var(--n, 1), minmax(0, 24px));
+  gap: 5px;
   margin-bottom: 12px;
 }
 
 .nights__bars span {
-  width: 24px;
   height: 8px;
   border-radius: 2px;
   background: rgba(124, 244, 255, 0.12);
@@ -317,29 +526,50 @@ main {
 }
 
 .nights.is-on .nights__bars span {
-  background: rgba(124, 244, 255, 0.7);
-  box-shadow: 0 0 10px rgba(124, 244, 255, 0.45);
+  background: rgba(124, 244, 255, 0.55);
+  box-shadow: 0 0 8px rgba(124, 244, 255, 0.35);
+  animation: chase calc(var(--n) * 110ms + 1400ms) linear calc(var(--n) * 70ms + var(--i) * 110ms) infinite;
+}
+
+@keyframes chase {
+  0%,
+  14%,
+  100% {
+    background: rgba(124, 244, 255, 0.55);
+  }
+  4% {
+    background: #fff;
+    box-shadow: 0 0 16px rgba(124, 244, 255, 0.95);
+  }
 }
 
 .nights.is-on .nights__bars .is-party {
   background: var(--magenta);
   box-shadow: 0 0 14px rgba(255, 59, 212, 0.8);
+  animation: party-bar 1.2s ease-in-out infinite;
+}
+
+@keyframes party-bar {
+  50% {
+    box-shadow: 0 0 24px rgba(255, 59, 212, 1);
+  }
 }
 
 .nights__label {
   font-family: var(--font-display);
-  font-weight: 500;
-  font-size: 22px;
+  font-weight: 600;
+  font-size: 20px;
 }
 
 .actions {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
-  margin-top: 32px;
+  margin-top: 28px;
 }
 
 .button {
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -347,33 +577,65 @@ main {
   padding: 0 20px;
   font: inherit;
   font-size: 16px;
-  font-weight: 400;
+  font-weight: 500;
   line-height: 1.2;
   color: var(--ink);
   text-decoration: none;
-  background: rgba(5, 4, 26, 0.4);
+  background: rgba(255, 255, 255, 0.04);
   border: 1px solid var(--hairline);
   border-radius: 999px;
   cursor: pointer;
-  transition: border-color 200ms, background-color 200ms, color 200ms;
+  transition: border-color 200ms, background-color 200ms, color 200ms, transform 160ms;
 }
 
 .button:hover {
   border-color: var(--mist);
-  background: rgba(163, 171, 220, 0.08);
+  background: rgba(255, 255, 255, 0.09);
 }
 
+.button:active {
+  transform: scale(0.97);
+}
+
+/* The main action carries a ring of laser light that keeps circling. */
 .button--primary {
+  isolation: isolate;
   color: var(--night);
   font-weight: 600;
   background: var(--beam);
-  border-color: var(--beam);
-  box-shadow: 0 0 24px rgba(124, 244, 255, 0.35);
+  border-color: transparent;
+}
+
+.button--primary::before {
+  content: "";
+  position: absolute;
+  inset: -3px;
+  z-index: -1;
+  border-radius: inherit;
+  background: conic-gradient(from var(--spin), var(--beam), var(--magenta), #ffffff, var(--beam));
+  filter: blur(7px);
+  opacity: 0.85;
+  animation: spin 3.2s linear infinite;
+}
+
+.button--primary::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: var(--beam);
 }
 
 .button--primary:hover {
-  background: #a6f8ff;
-  border-color: #a6f8ff;
+  background: var(--beam);
+  border-color: transparent;
+}
+
+@keyframes spin {
+  to {
+    --spin: 360deg;
+  }
 }
 
 /* The address as the route you actually follow, ending at the door. */
@@ -386,8 +648,8 @@ main {
 .route li {
   position: relative;
   padding-inline-start: 30px;
-  padding-block: 7px;
-  font-size: 19px;
+  padding-block: 6px;
+  font-size: 18px;
 }
 
 .route li::before {
@@ -415,7 +677,7 @@ main {
 .route .route__door {
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: 26px;
+  font-size: 22px;
   color: var(--house);
 }
 
@@ -427,16 +689,18 @@ main {
   border: 0;
   background: var(--house);
   box-shadow: 0 0 18px rgba(255, 200, 121, 0.75);
+  animation: party-bar 1.6s ease-in-out infinite;
 }
 
 .driver {
-  margin-top: 20px;
-  padding-inline-start: 14px;
-  border-inline-start: 2px solid var(--hairline);
+  margin-top: 18px;
+  padding: 12px 16px;
+  border-radius: 16px;
+  background: rgba(5, 4, 26, 0.35);
 }
 
 .driver__label {
-  font-size: 14px;
+  font-size: 13px;
   color: var(--mist);
 }
 
@@ -448,7 +712,7 @@ main {
 }
 
 .where__apps {
-  margin-top: 18px;
+  margin-top: 16px;
   font-size: 15px;
   color: var(--mist);
 }
@@ -468,11 +732,10 @@ main {
 
 .footer {
   position: relative;
-  padding: 32px var(--gutter) calc(env(safe-area-inset-bottom) + 40px);
+  padding: 8px var(--gutter) calc(env(safe-area-inset-bottom) + 40px);
   text-align: center;
   font-size: 14px;
   color: var(--mist);
-  background: rgba(5, 4, 26, 0.9);
 }
 
 .toast {
@@ -507,15 +770,23 @@ main {
   }
 
   .hero__for {
-    font-size: 20px;
+    font-size: 18px;
   }
 
   .hero__rig {
-    bottom: calc(env(safe-area-inset-bottom) + 96px);
+    bottom: calc(env(safe-area-inset-bottom) + 150px);
   }
 
-  .name {
-    max-height: 40vh;
+  .hero__copy {
+    padding-bottom: 20vh;
+  }
+
+  .tapes {
+    height: 190px;
+  }
+
+  .tape__track {
+    font-size: 17px;
   }
 }
 
@@ -528,6 +799,6 @@ main {
   *::before,
   *::after {
     transition-duration: 0ms !important;
-    animation-duration: 0ms !important;
+    animation: none !important;
   }
 }

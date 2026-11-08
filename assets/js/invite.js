@@ -85,10 +85,10 @@ function googleCalendarUrl() {
 
 // ---------- Name ----------
 
-// On narrow screens a two-word name is stacked so it can stay large.
+// On narrow screens a long two-word name is stacked so it stays readable.
 function splitName(text) {
   const narrow = window.innerWidth < 640;
-  const limit = narrow ? 8 : 18;
+  const limit = narrow ? 11 : 20;
   if (text.length <= limit || !text.includes(' ')) return [text];
   const mid = text.length / 2;
   let best = -1;
@@ -106,6 +106,7 @@ function renderName(text) {
 
   const svg = $('.name');
   const el = svg.querySelector('.name__text');
+  svg.style.setProperty('--lines', lines.length === 1 ? 1 : 1.75);
   el.textContent = '';
   lines.forEach((line, i) => {
     const span = document.createElementNS(SVG_NS, 'tspan');
@@ -142,6 +143,7 @@ function fillDetails() {
   const count = n < 0 ? 0 : Math.min(Math.max(n, 1), 30);
   const bars = $('.nights__bars');
   bars.hidden = count === 0;
+  bars.style.setProperty('--n', count);
   bars.replaceChildren(
     ...Array.from({ length: count }, (_, i) => {
       const bar = document.createElement('span');
@@ -170,6 +172,75 @@ function fillDetails() {
   $('[data-balad]').href = `https://balad.ir/location?latitude=${lat}&longitude=${lng}&zoom=17`;
 
   $('[data-footer]').textContent = guest ? `Invitation no. ${invitationNumber(guest)}, made for ${guest}` : '';
+}
+
+function fillTapes() {
+  const dates = formatDates();
+  const items = [
+    guest ? `${guest}, you're invited` : "You're invited",
+    PARTY.host ? `${PARTY.host}'s birthday` : 'Birthday party',
+    PARTY.startTime ? `${dates.short}, ${formatTime(PARTY.startTime)}` : dates.short,
+    'Shahrak-e Gharb, Tehran',
+  ];
+  document.querySelectorAll('[data-tape]').forEach((track) => {
+    // Two identical halves, so sliding by -50% loops without a seam.
+    const half = Array.from({ length: 3 }, () => items).flat();
+    track.replaceChildren(
+      ...[...half, ...half].flatMap((text) => {
+        const item = document.createElement('span');
+        item.textContent = text;
+        const star = document.createElement('span');
+        star.textContent = '✦';
+        return [item, star];
+      }),
+    );
+  });
+}
+
+function startCountdown() {
+  if (!PARTY.startTime) return;
+  const target = new Date(`${PARTY.date}T${PARTY.startTime}:00+03:30`).getTime();
+  const box = $('[data-countdown]');
+  const note = $('[data-countdown-note]');
+  const nums = Object.fromEntries([...box.querySelectorAll('[data-unit]')].map((el) => [el.dataset.unit, el]));
+  const labels = Object.fromEntries([...box.querySelectorAll('[data-label]')].map((el) => [el.dataset.label, el]));
+  const words = { d: ['day', 'days'], h: ['hour', 'hours'], m: ['min', 'min'], s: ['sec', 'sec'] };
+
+  const tick = () => {
+    const left = Math.floor((target - Date.now()) / 1000);
+    if (left <= 0) {
+      box.hidden = true;
+      note.hidden = false;
+      note.textContent = left > -6 * 3600 ? 'The party is on right now' : 'Thanks for coming';
+      return false;
+    }
+    box.hidden = false;
+    const values = {
+      d: Math.floor(left / 86400),
+      h: Math.floor((left % 86400) / 3600),
+      m: Math.floor((left % 3600) / 60),
+      s: left % 60,
+    };
+    for (const [unit, value] of Object.entries(values)) {
+      const text = String(value).padStart(2, '0');
+      if (nums[unit].textContent !== text) {
+        nums[unit].textContent = text;
+        if (!reducedMotion) {
+          nums[unit].classList.remove('is-ticking');
+          void nums[unit].offsetWidth;
+          nums[unit].classList.add('is-ticking');
+        }
+      }
+      labels[unit].textContent = words[unit][value === 1 ? 0 : 1];
+    }
+    return true;
+  };
+
+  if (tick()) {
+    const timer = setInterval(() => {
+      if (!tick()) clearInterval(timer);
+    }, 1000);
+  }
 }
 
 let toastTimer = 0;
@@ -236,6 +307,9 @@ function wireStage(stage) {
 
   if (!reducedMotion) {
     window.addEventListener('pointermove', (e) => stage.setAim((e.clientX / window.innerWidth - 0.5) * 2), { passive: true });
+    $('.hero').addEventListener('pointerdown', (e) => {
+      if (!e.target.closest('a, button')) stage.hit(e.clientX, e.clientY);
+    });
   }
 }
 
@@ -252,6 +326,8 @@ async function main() {
 
   const stage = createStage($('.stage'), { seed: hashString(guest || 'guest'), reducedMotion });
   fillDetails();
+  fillTapes();
+  startCountdown();
   $('[data-copy]').addEventListener('click', copyAddress);
   wireStage(stage);
   revealNights();

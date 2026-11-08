@@ -10,7 +10,7 @@
   <meta property="og:type" content="website">
   <meta property="og:title" content="You're invited to a birthday party">
   <meta property="og:description" content="Thursday 19 November 2026, 6 pm, Shahrak-e Gharb, Tehran">
-  <meta property="og:image" content="https://you-are-invited-to-party.github.io/you-are-invited-to-party/assets/og.jpg">
+  <meta property="og:image" content="https://you-are-invited-to-party.github.io/assets/og.jpg">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta name="twitter:card" content="summary_large_image">
@@ -18,7 +18,7 @@
   <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=Unbounded:wght@500;700;800&family=Vazirmatn:wght@400&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=Unbounded:wght@500;600;700;800&family=Vazirmatn:wght@400&display=swap">
   <link rel="stylesheet" href="assets/css/invite.css">
   <script type="module" src="assets/js/invite.js"></script>
 </head>
@@ -37,6 +37,15 @@
         </h1>
         <p class="hero__line" data-to-party>You're invited to a birthday party.</p>
         <p class="hero__date" data-date-short></p>
+
+        <div class="countdown" data-countdown hidden>
+          <span class="countdown__live" aria-hidden="true"></span>
+          <div class="countdown__unit"><span class="countdown__num" data-unit="d">00</span><span class="countdown__label" data-label="d">days</span></div>
+          <div class="countdown__unit"><span class="countdown__num" data-unit="h">00</span><span class="countdown__label" data-label="h">hours</span></div>
+          <div class="countdown__unit"><span class="countdown__num" data-unit="m">00</span><span class="countdown__label" data-label="m">min</span></div>
+          <div class="countdown__unit"><span class="countdown__num" data-unit="s">00</span><span class="countdown__label" data-label="s">sec</span></div>
+        </div>
+        <p class="countdown__note" data-countdown-note hidden></p>
       </div>
 
       <div class="hero__rig" aria-hidden="true"></div>
@@ -46,13 +55,20 @@
       </a>
     </section>
 
+    <div class="tapes" aria-hidden="true">
+      <div class="tape tape--magenta"><div class="tape__track" data-tape></div></div>
+      <div class="tape tape--ice"><div class="tape__track" data-tape></div></div>
+    </div>
+
     <section class="details" id="details" aria-label="When and where">
       <div class="details__grid">
-        <article class="when" aria-labelledby="when-title">
+        <article class="panel when" aria-labelledby="when-title">
           <h2 class="details__title" id="when-title">When</h2>
           <p class="when__date"><span data-date-weekday></span> <span data-date-long></span></p>
-          <p class="when__alt" data-date-alt></p>
-          <p class="when__time" data-time hidden></p>
+          <p class="when__meta">
+            <span class="when__time" data-time hidden></span>
+            <span class="when__alt" data-date-alt></span>
+          </p>
 
           <div class="nights">
             <div class="nights__bars" aria-hidden="true"></div>
@@ -65,7 +81,7 @@
           </div>
         </article>
 
-        <article class="where" aria-labelledby="where-title">
+        <article class="panel where" aria-labelledby="where-title">
           <h2 class="details__title" id="where-title">Where</h2>
           <ol class="route" data-route></ol>
           <div class="driver">
@@ -74,7 +90,7 @@
           </div>
 
           <div class="actions">
-            <a class="button button--primary" data-gmaps target="_blank" rel="noopener">Open in Google Maps</a>
+            <a class="button button--primary" data-gmaps target="_blank" rel="noopener"><span>Open in Google Maps</span></a>
             <button class="button" type="button" data-copy>Copy address</button>
           </div>
           <p class="where__apps">

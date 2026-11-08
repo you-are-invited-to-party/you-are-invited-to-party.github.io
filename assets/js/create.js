@@ -1,4 +1,4 @@
-import { cleanName, encodeInvite, invitationNumber } from './invite-token.js';
+import { cleanName, inviteLink, invitationNumber } from './invite-token.js';
 
 const STORAGE_KEY = 'invite-maker-names';
 const base = new URL('../', location.href);
@@ -10,12 +10,6 @@ const empty = document.querySelector('[data-empty]');
 const warning = document.querySelector('[data-warning]');
 const copyAll = document.querySelector('[data-copy-all]');
 let messages = [];
-
-function linkFor(name) {
-  const url = new URL(base);
-  url.searchParams.set('i', encodeInvite(name));
-  return url.toString();
-}
 
 function messageFor(name, url) {
   return `Hi ${name}!\nHere's your invitation to the birthday party:\n${url}`;
@@ -69,7 +63,7 @@ function render() {
   messages = [];
   list.replaceChildren(
     ...names.map((name) => {
-      const url = linkFor(name);
+      const url = inviteLink(base, name);
       const text = messageFor(name, url);
       messages.push(text);
 

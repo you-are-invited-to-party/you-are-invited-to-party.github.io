@@ -162,6 +162,7 @@ export function createStage(canvas, { seed = 1, reducedMotion = false } = {}) {
   let aimTarget = 0;
   let sourceProvider = () => ({ x: W / 2, y: H * 0.86 });
   let intro = null;
+  const hits = [];
 
   function resize() {
     const rect = canvas.getBoundingClientRect();
@@ -201,7 +202,7 @@ export function createStage(canvas, { seed = 1, reducedMotion = false } = {}) {
       for (let i = 0; i < fan.count; i++) {
         const u = fan.count > 1 ? i / (fan.count - 1) - 0.5 : 0;
         const ripple = fan.ripple * Math.sin(t * 0.9 * TAU * fan.rate * 4 + i * 1.3);
-        const angle = clamp((fan.center + swing) * open + u * fan.spread * open + ripple + aim * 0.12, -1.5, 1.5);
+        const angle = clamp((fan.center + swing) * open + u * fan.spread * open + ripple + aim * 0.28, -1.5, 1.5);
         drawBeam(sprite, src.x, src.y, UP + angle, len, width, alpha * pulse * (0.55 + 0.45 * Math.cos(u * 2.2)));
       }
     }
@@ -243,7 +244,7 @@ export function createStage(canvas, { seed = 1, reducedMotion = false } = {}) {
     aim += (aimTarget - aim) * 0.04;
 
     const src = sourceProvider();
-    const showLevel = 1 - 0.78 * house;
+    const showLevel = 1 - 0.5 * house;
 
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.globalAlpha = 1;
@@ -278,7 +279,7 @@ export function createStage(canvas, { seed = 1, reducedMotion = false } = {}) {
     ctx.globalCompositeOperation = 'lighter';
 
     // Colour wash rising from the rig, plus a faint fill across the room.
-    const washLevel = washAmt * (1 - 0.65 * house);
+    const washLevel = washAmt * (1 - 0.45 * house);
     let g = ctx.createRadialGradient(src.x, src.y, 0, src.x, src.y, Math.max(W, H) * 1.05);
     g.addColorStop(0, rgba(washColor, 0.55 * washLevel));
     g.addColorStop(0.45, rgba(washColor, 0.2 * washLevel));
@@ -299,10 +300,12 @@ export function createStage(canvas, { seed = 1, reducedMotion = false } = {}) {
     }
 
     if (intro) drawIntroBeams(now, src);
+    if (hits.length) drawHits(now, src);
 
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.globalAlpha = 1;
-    drawBloom(bloomColor, src, (0.55 + 0.45 * showAlpha + flash * 0.5) * (1 - 0.6 * house) * (intro && showAlpha === 0 ? 0.6 : 1), t);
+    const hitFlash = hits.reduce((sum, h) => sum + Math.max(0, 1 - (now - h.start) / 500), 0);
+    drawBloom(bloomColor, src, (0.55 + 0.45 * showAlpha + flash * 0.5 + Math.min(hitFlash, 1) * 0.4) * (1 - 0.5 * house) * (intro && showAlpha === 0 ? 0.6 : 1), t);
 
     // House lights: warm ceiling glow and a row of lamps as you scroll to the details.
     if (house > 0.01) {
@@ -368,6 +371,34 @@ export function createStage(canvas, { seed = 1, reducedMotion = false } = {}) {
     });
   }
 
+  // A tap fires three beams at that spot; they flare and fade.
+  function drawHits(now, src) {
+    const len = Math.max(W, H) * 1.6;
+    const width = Math.max(40, Math.min(W, H) * 0.08);
+    for (let k = hits.length - 1; k >= 0; k--) {
+      const hit = hits[k];
+      const age = (now - hit.start) / 1000;
+      if (age > 1.2) {
+        hits.splice(k, 1);
+        continue;
+      }
+      const level = age < 0.06 ? age / 0.06 : 1 - (age - 0.06) / 1.14;
+      [-1, 0, 1].forEach((side, i) => {
+        const angle = Math.atan2(hit.y - src.y, hit.x + side * 10 - src.x);
+        drawBeam(sprites[i === 1 ? 'white' : 'magenta'], src.x, src.y, angle, len, width, level);
+      });
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.globalAlpha = level;
+      const r = 30 + age * 60;
+      const g = ctx.createRadialGradient(hit.x, hit.y, 0, hit.x, hit.y, r);
+      g.addColorStop(0, 'rgba(255,255,255,0.95)');
+      g.addColorStop(0.3, rgba(COLORS.magenta, 0.55));
+      g.addColorStop(1, rgba(COLORS.magenta, 0));
+      ctx.fillStyle = g;
+      ctx.fillRect(hit.x - r, hit.y - r, r * 2, r * 2);
+    }
+  }
+
   function loop(now) {
     draw(now);
     raf = requestAnimationFrame(loop);
@@ -406,6 +437,11 @@ export function createStage(canvas, { seed = 1, reducedMotion = false } = {}) {
     },
     setAim(value) {
       aimTarget = clamp(value, -1, 1);
+    },
+    hit(x, y) {
+      if (reducedMotion) return;
+      hits.push({ x, y, start: performance.now() });
+      if (hits.length > 8) hits.shift();
     },
     stop() {
       cancelAnimationFrame(raf);
