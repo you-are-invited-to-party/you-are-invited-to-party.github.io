@@ -1,0 +1,152 @@
+.maker {
+  background:
+    radial-gradient(120% 60% at 50% 115%, rgba(46, 40, 255, 0.35), transparent 70%),
+    var(--night);
+  background-attachment: fixed;
+}
+
+.maker__main {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: calc(env(safe-area-inset-top) + 56px) var(--gutter) 96px;
+}
+
+.maker__title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(34px, 6vw, 48px);
+  line-height: 1.2;
+}
+
+.maker__intro {
+  margin-top: 12px;
+  max-width: 60ch;
+  color: var(--mist);
+}
+
+.maker__form {
+  margin-top: 40px;
+  display: grid;
+  gap: 24px;
+}
+
+.maker__label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 15px;
+  color: var(--mist);
+}
+
+.maker textarea {
+  width: 100%;
+  padding: 14px 16px;
+  font: inherit;
+  font-size: 18px;
+  line-height: 1.7;
+  color: var(--ink);
+  background: rgba(5, 4, 26, 0.6);
+  border: 1px solid var(--hairline);
+  border-radius: 12px;
+  resize: vertical;
+}
+
+.maker textarea:focus {
+  outline: none;
+  border-color: var(--beam);
+  box-shadow: 0 0 0 3px rgba(124, 244, 255, 0.18);
+}
+
+.maker__lang {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+}
+
+.maker__lang legend {
+  float: left;
+  width: 100%;
+}
+
+.maker__lang label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 40px;
+  cursor: pointer;
+}
+
+.maker__lang input {
+  accent-color: var(--beam);
+  width: 18px;
+  height: 18px;
+}
+
+.maker .actions {
+  margin-top: 0;
+}
+
+.maker__empty {
+  margin-top: 48px;
+  color: var(--mist);
+}
+
+.links {
+  list-style: none;
+  margin: 48px 0 0;
+  padding: 0;
+  display: grid;
+  gap: 0;
+}
+
+.link {
+  padding: 20px 0;
+  border-top: 1px solid var(--hairline);
+}
+
+.link__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.link__name {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 24px;
+}
+
+.link__no {
+  font-size: 14px;
+  color: var(--mist);
+  white-space: nowrap;
+}
+
+.link__url {
+  display: block;
+  margin-top: 4px;
+  font-size: 14px;
+  color: var(--beam);
+  overflow-wrap: anywhere;
+  text-decoration: none;
+}
+
+.link__url:hover {
+  text-decoration: underline;
+}
+
+.link__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.button--small {
+  min-height: 40px;
+  padding: 0 16px;
+  font-size: 15px;
+}

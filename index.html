@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>You're invited to a birthday party</title>
+  <meta name="description" content="You're invited to a birthday party on Thursday 19 November 2026 in Shahrak-e Gharb, Tehran.">
+  <meta name="theme-color" content="#05041a">
+  <meta name="color-scheme" content="dark">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="You're invited to a birthday party">
+  <meta property="og:description" content="Thursday 19 November 2026, Shahrak-e Gharb, Tehran">
+  <meta property="og:image" content="https://you-are-invited-to-party.github.io/you-are-invited-to-party/assets/og.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=Unbounded:wght@500;700;800&family=Vazirmatn:wght@400&display=swap">
+  <link rel="stylesheet" href="assets/css/invite.css">
+  <script type="module" src="assets/js/invite.js"></script>
+</head>
+<body>
+  <canvas class="stage" aria-hidden="true"></canvas>
+
+  <main>
+    <section class="hero is-armed" aria-labelledby="guest-name">
+      <div class="hero__copy">
+        <p class="hero__for">An invitation for</p>
+        <h1 class="hero__name" id="guest-name">
+          <svg class="name" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
+            <text class="name__text" x="0" y="0" text-anchor="middle"></text>
+          </svg>
+          <span class="visually-hidden" data-name-label></span>
+        </h1>
+        <p class="hero__line" data-to-party>You're invited to a birthday party.</p>
+        <p class="hero__date" data-date-short></p>
+      </div>
+
+      <div class="hero__rig" aria-hidden="true"></div>
+      <a class="hero__cue" href="#details">
+        <span>See when and where</span>
+        <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </section>
+
+    <section class="details" id="details" aria-label="When and where">
+      <div class="details__grid">
+        <article class="when" aria-labelledby="when-title">
+          <h2 class="details__title" id="when-title">When</h2>
+          <p class="when__date"><span data-date-weekday></span> <span data-date-long></span></p>
+          <p class="when__alt" data-date-alt></p>
+          <p class="when__time" data-time hidden></p>
+
+          <div class="nights">
+            <div class="nights__bars" aria-hidden="true"></div>
+            <p class="nights__label" data-nights></p>
+          </div>
+
+          <div class="actions">
+            <a class="button" data-gcal target="_blank" rel="noopener">Add to Google Calendar</a>
+            <a class="button" href="party.ics">Add to Apple Calendar</a>
+          </div>
+        </article>
+
+        <article class="where" aria-labelledby="where-title">
+          <h2 class="details__title" id="where-title">Where</h2>
+          <ol class="route" data-route></ol>
+          <div class="driver">
+            <p class="driver__label">In Persian, for your driver</p>
+            <p class="driver__address" lang="fa" dir="rtl" data-driver-address></p>
+          </div>
+
+          <div class="actions">
+            <a class="button button--primary" data-gmaps target="_blank" rel="noopener">Open in Google Maps</a>
+            <button class="button" type="button" data-copy>Copy address</button>
+          </div>
+          <p class="where__apps">
+            Other map apps:
+            <a data-waze target="_blank" rel="noopener">Waze</a>,
+            <a data-neshan target="_blank" rel="noopener">Neshan</a>,
+            <a data-balad target="_blank" rel="noopener">Balad</a>
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <p data-footer></p>
+    </footer>
+  </main>
+
+  <div class="toast" role="status" aria-live="polite"></div>
+</body>
+</html>

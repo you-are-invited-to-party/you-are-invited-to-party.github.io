@@ -1,0 +1,531 @@
+:root {
+  --night: #05041a;
+  --ink: #eef3ff;
+  --mist: #a3abdc;
+  --beam: #7cf4ff;
+  --magenta: #ff3bd4;
+  --house: #ffc879;
+  --hairline: rgba(163, 171, 220, 0.24);
+
+  --font-display: "Unbounded", system-ui, sans-serif;
+  --font-body: "Instrument Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-persian: "Vazirmatn", "Geeza Pro", "Noto Sans Arabic", sans-serif;
+
+  --gutter: clamp(20px, 5vw, 48px);
+  color-scheme: dark;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--night);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 17px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+p,
+h1,
+h2,
+ol {
+  margin: 0;
+}
+
+a {
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--beam);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* ---------- Stage ---------- */
+
+.stage {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100vh;
+  height: 100lvh;
+  display: block;
+  z-index: 0;
+}
+
+main {
+  position: relative;
+  z-index: 1;
+}
+
+/* ---------- Hero ---------- */
+
+.hero {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100svh;
+  display: grid;
+  grid-template-rows: 1fr auto;
+  padding: calc(env(safe-area-inset-top) + 64px) var(--gutter) calc(env(safe-area-inset-bottom) + 20px);
+  text-align: center;
+}
+
+.hero__copy {
+  align-self: center;
+  text-shadow: 0 1px 14px rgba(5, 4, 26, 0.85);
+  display: grid;
+  justify-items: center;
+  gap: 14px;
+  padding-bottom: 14vh;
+}
+
+.hero__for {
+  font-size: 17px;
+  font-weight: 300;
+  color: var(--mist);
+  letter-spacing: 0.01em;
+}
+
+.hero__name {
+  width: 100%;
+  display: grid;
+  justify-items: center;
+  font-weight: inherit;
+}
+
+.name {
+  display: block;
+  width: min(92vw, 960px);
+  height: auto;
+  max-height: 34vh;
+  max-height: 34svh;
+  overflow: visible;
+  filter: drop-shadow(0 0 4px rgba(124, 244, 255, 0.75)) drop-shadow(0 0 22px rgba(124, 244, 255, 0.35));
+}
+
+.name__text {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 100px;
+  fill: rgba(238, 243, 255, 1);
+  stroke: var(--beam);
+  stroke-width: 1.5px;
+  stroke-linejoin: round;
+  paint-order: stroke;
+}
+
+.hero__line {
+  font-size: clamp(19px, 2.4vw, 24px);
+  max-width: 30ch;
+  text-wrap: balance;
+}
+
+.hero__date {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(20px, 2.6vw, 28px);
+  color: var(--beam);
+}
+
+.hero__rig {
+  position: absolute;
+  left: 50%;
+  bottom: calc(env(safe-area-inset-bottom) + 108px);
+  width: 2px;
+  height: 2px;
+}
+
+.hero__cue {
+  justify-self: center;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  min-height: 44px;
+  padding: 6px 14px;
+  font-size: 15px;
+  color: var(--ink);
+  text-decoration: none;
+  opacity: 0.85;
+}
+
+.hero__cue:hover {
+  opacity: 1;
+}
+
+/* Intro choreography: the copy waits in the dark while the lasers draw the name. */
+
+.hero.is-armed .hero__for,
+.hero.is-armed .hero__line,
+.hero.is-armed .hero__date,
+.hero.is-armed .hero__cue {
+  opacity: 0;
+  transition: opacity 700ms ease;
+}
+
+.hero.is-armed.is-ready .hero__for,
+.hero.is-armed.is-ready .hero__line,
+.hero.is-armed.is-ready .hero__date {
+  opacity: 1;
+}
+
+.hero.is-armed.is-ready .hero__cue {
+  opacity: 0.85;
+  transition-delay: 500ms;
+}
+
+.hero.is-armed .name__text {
+  fill: rgba(238, 243, 255, 0);
+  stroke-dasharray: 1400;
+  stroke-dashoffset: 1400;
+}
+
+.hero.is-armed .name {
+  filter: drop-shadow(0 0 3px rgba(124, 244, 255, 0.9));
+}
+
+.hero.is-armed.is-drawing .name__text {
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 2.2s cubic-bezier(0.55, 0.05, 0.3, 1);
+}
+
+.hero.is-armed.is-lit .name__text {
+  fill: rgba(238, 243, 255, 1);
+  stroke-dasharray: none;
+  animation: ignite 900ms linear;
+}
+
+.hero.is-armed.is-lit .name {
+  filter: drop-shadow(0 0 4px rgba(124, 244, 255, 0.75)) drop-shadow(0 0 22px rgba(124, 244, 255, 0.35));
+  transition: filter 600ms ease;
+}
+
+/* A neon tube catching: two stutters, then it holds. */
+@keyframes ignite {
+  0% { fill: rgba(238, 243, 255, 0); }
+  12% { fill: rgba(238, 243, 255, 0.8); }
+  20% { fill: rgba(238, 243, 255, 0.15); }
+  34% { fill: rgba(238, 243, 255, 0.9); }
+  42% { fill: rgba(238, 243, 255, 0.45); }
+  100% { fill: rgba(238, 243, 255, 1); }
+}
+
+/* ---------- Details ---------- */
+
+.details {
+  position: relative;
+  padding: 18vh var(--gutter) 72px;
+  background: linear-gradient(to bottom, rgba(5, 4, 26, 0), rgba(5, 4, 26, 0.78) 22%, rgba(5, 4, 26, 0.9));
+}
+
+.details__grid {
+  max-width: 1040px;
+  margin: 0 auto;
+  display: grid;
+  gap: 72px;
+}
+
+@media (min-width: 860px) {
+  .details__grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 96px;
+  }
+}
+
+.details__title {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 22px;
+  color: var(--mist);
+  margin-bottom: 16px;
+}
+
+.when__date {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(24px, 7vw, 34px);
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+}
+
+.when__date span {
+  display: block;
+}
+
+@media (min-width: 860px) {
+  .when__date {
+    font-size: clamp(28px, 3.1vw, 34px);
+  }
+}
+
+.when__alt,
+.when__time {
+  margin-top: 6px;
+  font-size: 18px;
+  color: var(--mist);
+}
+
+.when__time {
+  color: var(--ink);
+}
+
+/* One LED bar per night left; the last one is the party. */
+.nights {
+  margin-top: 32px;
+}
+
+.nights__bars {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  max-width: 420px;
+  margin-bottom: 12px;
+}
+
+.nights__bars span {
+  width: 24px;
+  height: 8px;
+  border-radius: 2px;
+  background: rgba(124, 244, 255, 0.12);
+  transition: background-color 240ms ease, box-shadow 240ms ease;
+  transition-delay: calc(var(--i) * 70ms);
+}
+
+.nights.is-on .nights__bars span {
+  background: rgba(124, 244, 255, 0.7);
+  box-shadow: 0 0 10px rgba(124, 244, 255, 0.45);
+}
+
+.nights.is-on .nights__bars .is-party {
+  background: var(--magenta);
+  box-shadow: 0 0 14px rgba(255, 59, 212, 0.8);
+}
+
+.nights__label {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 22px;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 32px;
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: 0 20px;
+  font: inherit;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.2;
+  color: var(--ink);
+  text-decoration: none;
+  background: rgba(5, 4, 26, 0.4);
+  border: 1px solid var(--hairline);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: border-color 200ms, background-color 200ms, color 200ms;
+}
+
+.button:hover {
+  border-color: var(--mist);
+  background: rgba(163, 171, 220, 0.08);
+}
+
+.button--primary {
+  color: var(--night);
+  font-weight: 600;
+  background: var(--beam);
+  border-color: var(--beam);
+  box-shadow: 0 0 24px rgba(124, 244, 255, 0.35);
+}
+
+.button--primary:hover {
+  background: #a6f8ff;
+  border-color: #a6f8ff;
+}
+
+/* The address as the route you actually follow, ending at the door. */
+.route {
+  list-style: none;
+  padding: 0;
+  position: relative;
+}
+
+.route li {
+  position: relative;
+  padding-inline-start: 30px;
+  padding-block: 7px;
+  font-size: 19px;
+}
+
+.route li::before {
+  content: "";
+  position: absolute;
+  inset-inline-start: 4px;
+  top: calc(50% - 4px);
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  border: 1.5px solid var(--beam);
+  background: var(--night);
+}
+
+.route li:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  inset-inline-start: 8px;
+  top: calc(50% + 6px);
+  height: calc(100% - 10px);
+  width: 1.5px;
+  background: linear-gradient(to bottom, rgba(124, 244, 255, 0.7), rgba(124, 244, 255, 0.25));
+}
+
+.route .route__door {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 26px;
+  color: var(--house);
+}
+
+.route .route__door::before {
+  inset-inline-start: 1px;
+  top: calc(50% - 7px);
+  width: 15px;
+  height: 15px;
+  border: 0;
+  background: var(--house);
+  box-shadow: 0 0 18px rgba(255, 200, 121, 0.75);
+}
+
+.driver {
+  margin-top: 20px;
+  padding-inline-start: 14px;
+  border-inline-start: 2px solid var(--hairline);
+}
+
+.driver__label {
+  font-size: 14px;
+  color: var(--mist);
+}
+
+.driver__address {
+  font-family: var(--font-persian);
+  font-size: 17px;
+  line-height: 1.9;
+  text-align: left;
+}
+
+.where__apps {
+  margin-top: 18px;
+  font-size: 15px;
+  color: var(--mist);
+}
+
+.where__apps a {
+  color: var(--ink);
+  text-decoration-color: var(--hairline);
+  text-underline-offset: 4px;
+  padding-block: 10px;
+}
+
+.where__apps a:hover {
+  text-decoration-color: var(--beam);
+}
+
+/* ---------- Footer & toast ---------- */
+
+.footer {
+  position: relative;
+  padding: 32px var(--gutter) calc(env(safe-area-inset-bottom) + 40px);
+  text-align: center;
+  font-size: 14px;
+  color: var(--mist);
+  background: rgba(5, 4, 26, 0.9);
+}
+
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: calc(env(safe-area-inset-bottom) + 24px);
+  z-index: 10;
+  padding: 12px 20px;
+  font-size: 15px;
+  color: var(--night);
+  background: var(--ink);
+  border-radius: 999px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+  transform: translate(-50%, 16px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 200ms, transform 200ms;
+  max-width: calc(100vw - 32px);
+  text-align: center;
+}
+
+.toast.is-visible {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+/* ---------- Larger screens ---------- */
+
+@media (min-width: 860px) {
+  body {
+    font-size: 18px;
+  }
+
+  .hero__for {
+    font-size: 20px;
+  }
+
+  .hero__rig {
+    bottom: calc(env(safe-area-inset-bottom) + 96px);
+  }
+
+  .name {
+    max-height: 40vh;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0ms !important;
+    animation-duration: 0ms !important;
+  }
+}

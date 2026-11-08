@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Invitation links</title>
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#05041a">
+  <meta name="color-scheme" content="dark">
+  <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=Unbounded:wght@500;700&display=swap">
+  <link rel="stylesheet" href="../assets/css/invite.css">
+  <link rel="stylesheet" href="../assets/css/create.css">
+  <script type="module" src="../assets/js/create.js"></script>
+</head>
+<body class="maker">
+  <main class="maker__main">
+    <h1 class="maker__title">Invitation links</h1>
+    <p class="maker__intro">Write each guest's name in English, one per line. Every name gets its own link, and the lasers draw that name when the guest opens it.</p>
+
+    <form class="maker__form" data-form>
+      <div>
+        <label class="maker__label" for="names">Guest names</label>
+        <textarea id="names" name="names" rows="7" placeholder="Sara&#10;Ali Rezaei&#10;Maryam and Omid" spellcheck="false" autocapitalize="words"></textarea>
+        <p class="maker__warning" data-warning hidden>Some names aren't in English letters. They'll still work, but they're drawn best in English.</p>
+      </div>
+
+      <div class="actions">
+        <button class="button button--primary" type="submit">Make links</button>
+        <button class="button" type="button" data-copy-all hidden>Copy all messages</button>
+      </div>
+    </form>
+
+    <p class="maker__empty" data-empty>Your links will appear here.</p>
+    <ol class="links" data-links></ol>
+  </main>
+
+  <div class="toast" role="status" aria-live="polite"></div>
+</body>
+</html>

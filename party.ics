@@ -1,0 +1,20 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//you-are-invited-to-party//invitation//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:birthday-20261119@you-are-invited-to-party.github.io
+DTSTAMP:20261108T120000Z
+DTSTART;VALUE=DATE:20261119
+DTEND;VALUE=DATE:20261120
+SUMMARY:Birthday party
+LOCATION:Shahrak-e Gharb\, North Zarafshan St.\, 3rd alley\, 1st side alley
+ \, No. 4 (1387)\, Tehran
+GEO:35.7577133;51.3523889
+URL:https://maps.app.goo.gl/AGuqCJ3yrttqhef17
+DESCRIPTION:Thursday 19 November 2026\nAddress in Persian: شهرک غرب
+ ، زرافشان شمالی، کوچه سوم، فرعی اول، پلا
+ ک ۴ (۱۳۸۷)\nMap: https://maps.app.goo.gl/AGuqCJ3yrttqhef17
+END:VEVENT
+END:VCALENDAR
