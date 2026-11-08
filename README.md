@@ -19,10 +19,10 @@ You can also write a link by hand: `.../?to=Sara`.
 Edit [`assets/js/config.js`](assets/js/config.js):
 
 - `host`: whose birthday it is (leave empty to keep it neutral)
-- `startTime`: the start time in Tehran, like `'20:00'` (leave empty to show the date only)
+- `startTime`: the start time in Tehran, like `'18:00'` (leave empty to show the date only)
 - `date`, `route`, `addressFa` and `map`: the date and the address
 
-The Apple Calendar file is [`party.ics`](party.ics). If you add a start time, update `DTSTART` and `DTEND` there too.
+The Apple Calendar file is [`party.ics`](party.ics). If you change the date or time, update `DTSTART` and `DTEND` there too (they're in UTC; Tehran is UTC+3:30).
 
 ## Running locally
 

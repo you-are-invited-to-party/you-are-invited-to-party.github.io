@@ -6,15 +6,16 @@ METHOD:PUBLISH
 BEGIN:VEVENT
 UID:birthday-20261119@you-are-invited-to-party.github.io
 DTSTAMP:20261108T120000Z
-DTSTART;VALUE=DATE:20261119
-DTEND;VALUE=DATE:20261120
+DTSTART:20261119T143000Z
+DTEND:20261119T183000Z
 SUMMARY:Birthday party
 LOCATION:Shahrak-e Gharb\, North Zarafshan St.\, 3rd alley\, 1st side alley
  \, No. 4 (1387)\, Tehran
 GEO:35.7577133;51.3523889
 URL:https://maps.app.goo.gl/AGuqCJ3yrttqhef17
-DESCRIPTION:Thursday 19 November 2026\nAddress in Persian: شهرک غرب
- ، زرافشان شمالی، کوچه سوم، فرعی اول، پلا
- ک ۴ (۱۳۸۷)\nMap: https://maps.app.goo.gl/AGuqCJ3yrttqhef17
+DESCRIPTION:Thursday 19 November 2026\, 6 pm (Tehran)\nAddress in Persian: 
+ شهرک غرب، زرافشان شمالی، کوچه سوم، فرعی 
+ اول، پلاک ۴ (۱۳۸۷)\nMap: https://maps.app.goo.gl/AGuqCJ3yrttq
+ hef17
 END:VEVENT
 END:VCALENDAR

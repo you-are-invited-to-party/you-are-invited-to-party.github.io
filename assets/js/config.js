@@ -11,7 +11,7 @@ export const PARTY = {
 
   // Start time in Tehran as 'HH:MM' (24h), e.g. '20:00'. Leave empty to show
   // the date only.
-  startTime: '',
+  startTime: '18:00',
 
   // The address as a route, from the neighbourhood down to the door.
   route: {

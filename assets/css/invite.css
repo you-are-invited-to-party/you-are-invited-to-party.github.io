@@ -144,6 +144,8 @@ main {
 }
 
 .hero__date {
+  max-width: 22ch;
+  text-wrap: balance;
   font-family: var(--font-display);
   font-weight: 500;
   font-size: clamp(20px, 2.6vw, 28px);

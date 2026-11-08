@@ -33,6 +33,13 @@ function formatDates() {
   };
 }
 
+// '18:00' -> '6 pm', '18:30' -> '6:30 pm', with a no-break space so it never splits.
+function formatTime(value) {
+  const [h, m] = value.split(':').map(Number);
+  const hour = h % 12 || 12;
+  return `${hour}${m ? `:${String(m).padStart(2, '0')}` : ''}\u00a0${h < 12 ? 'am' : 'pm'}`;
+}
+
 function nightsLeft() {
   const parts = new Intl.DateTimeFormat('en-US', {
     year: 'numeric', month: 'numeric', day: 'numeric', timeZone: 'Asia/Tehran',
@@ -122,13 +129,13 @@ function fillDetails() {
     : "You're invited to a birthday party.";
 
   const dates = formatDates();
-  $('[data-date-short]').textContent = dates.short;
+  $('[data-date-short]').textContent = PARTY.startTime ? `${dates.short}, ${formatTime(PARTY.startTime)}` : dates.short;
   $('[data-date-weekday]').textContent = dates.weekday;
   $('[data-date-long]').textContent = dates.long;
   $('[data-date-alt]').textContent = dates.persian;
   const timeEl = $('[data-time]');
   timeEl.hidden = !PARTY.startTime;
-  if (PARTY.startTime) timeEl.textContent = `Starts at ${PARTY.startTime}`;
+  if (PARTY.startTime) timeEl.textContent = `Starts at ${formatTime(PARTY.startTime)}`;
 
   const n = nightsLeft();
   $('[data-nights]').textContent = nightsLabel(n);
