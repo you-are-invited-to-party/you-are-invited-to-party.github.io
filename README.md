@@ -19,7 +19,9 @@ Every invitation is unique: a laser writes the guest's name stroke by stroke, th
 
 ## RSVP
 
-At the bottom of each invitation guests answer **Will you be there?**: *Yes, I'll be there*, *Not sure yet* or *I can't make it*. Only a sure yes shows the **Join the Telegram group** button (the link is `telegram` in `config.js`). The answer is remembered on the guest's phone; the site itself doesn't collect answers, so the Telegram group is the guest list.
+At the bottom of each invitation guests answer **Will you be there?**: *Yes, I'll be there*, *Not sure yet* or *I can't make it*. Only a sure yes shows the **Join the Telegram group** button (the link is `telegram` in `config.js`). The answer is remembered on the guest's phone.
+
+Every answer is also sent to the **Party RSVPs** Google Sheet in the host's Google Drive (tab **RSVPs**): one row per guest with their answer, when they last answered, and how many times they changed it. The site posts to the Apps Script web app in `rsvpSheet` (`config.js`); its code is in [`tools/rsvp-sheet.gs`](tools/rsvp-sheet.gs). Guests in Iran without a VPN may not reach Google, so a few answers might be missing from the sheet.
 
 ## Changing party details
 
@@ -29,6 +31,7 @@ Edit [`assets/js/config.js`](assets/js/config.js):
 - `startTime`: the start time in Tehran, like `'18:00'` (leave empty to show the date only)
 - `date`, `route`, `addressFa` and `map`: the date and the address
 - `telegram`: the party group's invite link, shown to guests who answer yes
+- `rsvpSheet`: the Google Apps Script web app that records answers in the sheet
 
 The Apple Calendar file is [`party.ics`](party.ics). If you change the date or time, update `DTSTART` and `DTEND` there too (they're in UTC; Tehran is UTC+3:30).
 

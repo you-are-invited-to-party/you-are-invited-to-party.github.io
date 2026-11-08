@@ -25,6 +25,10 @@ export const PARTY = {
   // be there" get a button to join it.
   telegram: 'https://t.me/+f5fz2fLHzPkyYjg0',
 
+  // Google Apps Script web app URL (https://script.google.com/macros/s/…/exec)
+  // that records each guest's RSVP in your Google Sheet. See tools/rsvp-sheet.gs.
+  rsvpSheet: 'https://script.google.com/macros/s/AKfycbw_RlFPgyRJ4fECeYUbNTlffiEKOHPXVeHYD6eGewteNUfKDlgbL8_v1ywRNUouk2ES/exec',
+
   map: {
     google: 'https://maps.app.goo.gl/AGuqCJ3yrttqhef17',
     lat: 35.7577133,

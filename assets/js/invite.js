@@ -323,6 +323,20 @@ function wireRsvp(stage) {
     if (PARTY.telegram) telegram.href = PARTY.telegram;
   };
 
+  // Sends the answer to the host's Google Sheet. Fire and forget: the page
+  // can't read the reply (Google answers from another domain), and the guest's
+  // answer on screen doesn't depend on it.
+  const report = (answer) => {
+    if (!PARTY.rsvpSheet) return;
+    fetch(PARTY.rsvpSheet, {
+      method: 'POST',
+      mode: 'no-cors',
+      keepalive: true,
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({ name: guest, answer }),
+    }).catch(() => {});
+  };
+
   const save = (answer) => {
     try {
       if (answer) localStorage.setItem(key, answer);
@@ -343,6 +357,7 @@ function wireRsvp(stage) {
     }
     save(answer);
     show(answer);
+    report(answer);
   });
 
   $('[data-rsvp-change]').addEventListener('click', () => {
