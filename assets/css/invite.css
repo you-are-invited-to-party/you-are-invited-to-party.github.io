@@ -74,6 +74,11 @@ a {
   border-radius: 4px;
 }
 
+/* Elements styled with their own display (buttons, flex rows) still hide when told to. */
+[hidden] {
+  display: none !important;
+}
+
 .visually-hidden {
   position: absolute;
   width: 1px;
@@ -1003,6 +1008,63 @@ main {
 
 .where__apps a:hover {
   text-decoration-color: var(--beam);
+}
+
+/* ---------- RSVP ---------- */
+
+.rsvp {
+  text-align: center;
+}
+
+@media (min-width: 860px) {
+  .rsvp {
+    grid-column: 1 / -1;
+  }
+}
+
+.rsvp__title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(24px, 6vw, 34px);
+  line-height: 1.2;
+}
+
+.rsvp__choices {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 22px;
+}
+
+.rsvp__choices[hidden],
+.rsvp__result[hidden] {
+  display: none;
+}
+
+.rsvp__choice[data-answer="yes"] {
+  color: var(--night);
+  font-weight: 600;
+  background: var(--beam);
+  border-color: var(--beam);
+  box-shadow: 0 0 24px rgba(124, 244, 255, 0.35);
+}
+
+.rsvp__choice[data-answer="yes"]:hover {
+  background: #a6f8ff;
+  border-color: #a6f8ff;
+}
+
+.rsvp__message {
+  max-width: 46ch;
+  margin: 16px auto 0;
+  font-size: 18px;
+  text-wrap: balance;
+}
+
+.rsvp .actions {
+  justify-content: center;
+  margin-top: 22px;
 }
 
 /* ---------- Footer & toast ---------- */

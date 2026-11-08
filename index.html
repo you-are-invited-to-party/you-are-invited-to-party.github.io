@@ -132,6 +132,22 @@
             <a data-balad target="_blank" rel="noopener">Balad</a>
           </p>
         </article>
+
+        <article class="panel rsvp" aria-labelledby="rsvp-title">
+          <h2 class="rsvp__title" id="rsvp-title">Will you be there?</h2>
+          <div class="rsvp__choices" role="group" aria-labelledby="rsvp-title" data-rsvp-choices>
+            <button class="button rsvp__choice" type="button" data-answer="yes">Yes, I'll be there</button>
+            <button class="button rsvp__choice" type="button" data-answer="maybe">Not sure yet</button>
+            <button class="button rsvp__choice" type="button" data-answer="no">I can't make it</button>
+          </div>
+          <div class="rsvp__result" data-rsvp-result hidden>
+            <p class="rsvp__message" data-rsvp-message aria-live="polite"></p>
+            <div class="actions">
+              <a class="button button--primary" data-telegram target="_blank" rel="noopener" hidden><span>Join the Telegram group</span></a>
+              <button class="button" type="button" data-rsvp-change>Change my answer</button>
+            </div>
+          </div>
+        </article>
       </div>
     </section>
 

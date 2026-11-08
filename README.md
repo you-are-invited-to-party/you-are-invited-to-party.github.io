@@ -17,6 +17,10 @@ Each link is just the site address with the guest's name after `?`, for example 
 
 Every invitation is unique: a laser writes the guest's name stroke by stroke, the light show's running order comes from the name, and the footer shows an invitation number. A neon birthday cake sits at the bottom of the first screen and every beam comes out of its middle candle. Around it is a drawn club: a slatted ceiling and truss with moving-head lights, a mirror ball, LED meters on the walls, and a dancing crowd. Tapping the stage fires the lasers at that spot.
 
+## RSVP
+
+At the bottom of each invitation guests answer **Will you be there?**: *Yes, I'll be there*, *Not sure yet* or *I can't make it*. Only a sure yes shows the **Join the Telegram group** button (the link is `telegram` in `config.js`). The answer is remembered on the guest's phone; the site itself doesn't collect answers, so the Telegram group is the guest list.
+
 ## Changing party details
 
 Edit [`assets/js/config.js`](assets/js/config.js):
@@ -24,6 +28,7 @@ Edit [`assets/js/config.js`](assets/js/config.js):
 - `host`: whose birthday it is (leave empty to keep it neutral)
 - `startTime`: the start time in Tehran, like `'18:00'` (leave empty to show the date only)
 - `date`, `route`, `addressFa` and `map`: the date and the address
+- `telegram`: the party group's invite link, shown to guests who answer yes
 
 The Apple Calendar file is [`party.ics`](party.ics). If you change the date or time, update `DTSTART` and `DTEND` there too (they're in UTC; Tehran is UTC+3:30).
 

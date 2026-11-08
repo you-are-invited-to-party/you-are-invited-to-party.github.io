@@ -21,6 +21,10 @@ export const PARTY = {
   // The same address in Persian, for drivers and ride apps.
   addressFa: 'شهرک غرب، زرافشان شمالی، کوچه سوم، فرعی اول، پلاک ۴ (۱۳۸۷)',
 
+  // Telegram group invite link (https://t.me/+…). Guests who answer "Yes, I'll
+  // be there" get a button to join it.
+  telegram: 'https://t.me/+f5fz2fLHzPkyYjg0',
+
   map: {
     google: 'https://maps.app.goo.gl/AGuqCJ3yrttqhef17',
     lat: 35.7577133,

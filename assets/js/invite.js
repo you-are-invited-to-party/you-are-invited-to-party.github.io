@@ -294,6 +294,70 @@ async function copyAddress() {
   }
 }
 
+// ---------- RSVP ----------
+
+// Only a sure yes leads to the Telegram group. The answer is remembered on the
+// guest's phone, so it's still there when they come back.
+function wireRsvp(stage) {
+  const key = `rsvp:${guest || 'guest'}`;
+  const choices = $('[data-rsvp-choices]');
+  const result = $('[data-rsvp-result]');
+  const message = $('[data-rsvp-message]');
+  const telegram = $('[data-telegram]');
+  const firstName = guest ? guest.split(' ')[0] : '';
+
+  const messages = {
+    yes: PARTY.telegram
+      ? "Amazing, see you there! Join the party group on Telegram for updates and to plan the night."
+      : 'Amazing, see you there!',
+    maybe: "No pressure. Come back and tap \"Yes, I'll be there\" once you know, and you'll get the link to the party group.",
+    no: `We'll miss you${firstName ? `, ${firstName}` : ''}. If your plans change, you can answer again here.`,
+  };
+
+  const show = (answer) => {
+    choices.hidden = Boolean(answer);
+    result.hidden = !answer;
+    if (!answer) return;
+    message.textContent = messages[answer];
+    telegram.hidden = !(answer === 'yes' && PARTY.telegram);
+    if (PARTY.telegram) telegram.href = PARTY.telegram;
+  };
+
+  const save = (answer) => {
+    try {
+      if (answer) localStorage.setItem(key, answer);
+      else localStorage.removeItem(key);
+    } catch {}
+  };
+
+  choices.addEventListener('click', (e) => {
+    const button = e.target.closest('[data-answer]');
+    if (!button) return;
+    const answer = button.dataset.answer;
+    // A yes gets a quick burst of lasers aimed at the button.
+    if (answer === 'yes' && !reducedMotion) {
+      const r = button.getBoundingClientRect();
+      for (let i = 0; i < 5; i++) {
+        setTimeout(() => stage.hit(r.left + r.width * (0.2 + 0.15 * i), r.top + r.height / 2), i * 90);
+      }
+    }
+    save(answer);
+    show(answer);
+  });
+
+  $('[data-rsvp-change]').addEventListener('click', () => {
+    save(null);
+    show(null);
+    choices.querySelector('[data-answer]').focus();
+  });
+
+  let stored = null;
+  try {
+    stored = localStorage.getItem(key);
+  } catch {}
+  show(['yes', 'maybe', 'no'].includes(stored) ? stored : null);
+}
+
 // ---------- Show ----------
 
 function revealNights() {
@@ -375,6 +439,7 @@ async function main() {
   startCountdown();
   $('[data-copy]').addEventListener('click', copyAddress);
   wireStage(stage);
+  wireRsvp(stage);
   revealNights();
   stage.start();
 
