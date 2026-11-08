@@ -195,6 +195,7 @@ function fillDetails() {
   $('[data-neshan]').href = `https://neshan.org/maps/@${lat},${lng},17.0z,0.0p`;
   $('[data-balad]').href = `https://balad.ir/location?latitude=${lat}&longitude=${lng}&zoom=17`;
 
+  $('[data-dance]').textContent = guest ? `See you on the dance floor, ${guest}.` : 'See you on the dance floor.';
   $('[data-footer]').textContent = guest ? `Invitation no. ${invitationNumber(guest)}, made for ${guest}` : '';
 }
 
@@ -321,10 +322,17 @@ function wireStage(stage) {
   });
 
   const details = $('.details');
+  const night = $('.night');
   const updateHouse = () => {
     const top = details.getBoundingClientRect().top;
     const vh = window.innerHeight;
     stage.setHouse((vh - top) / (vh * 0.75));
+    // The photo drifts a little slower than the page as it scrolls past.
+    if (!reducedMotion) {
+      const rect = night.getBoundingClientRect();
+      const progress = (rect.top + rect.height / 2 - vh / 2) / vh;
+      night.style.setProperty('--drift', `${(progress * 60).toFixed(1)}px`);
+    }
   };
   window.addEventListener('scroll', updateHouse, { passive: true });
   window.addEventListener('resize', updateHouse);

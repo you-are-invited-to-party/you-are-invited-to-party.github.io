@@ -541,6 +541,7 @@ main {
 /* Two crossing LED tapes, like the light strips along the stage. */
 .tapes {
   position: relative;
+  z-index: 2;
   height: 150px;
   margin-top: -40px;
   overflow: hidden;
@@ -594,11 +595,79 @@ main {
   }
 }
 
+/* ---------- Night photo ---------- */
+
+/* The DJ shot sits between the tapes and the details: the tapes cross its top
+   edge, and the glass panels slide up over its bottom so its colours glow
+   through the frosting. */
+.night {
+  position: relative;
+  z-index: 1;
+  height: clamp(380px, 66vh, 680px);
+  margin-top: -88px;
+  overflow: hidden;
+  display: grid;
+  align-items: center;
+  justify-items: center;
+}
+
+.night__photo {
+  position: absolute;
+  inset: -40px 0;
+  margin: 0;
+  /* Dissolve both ends into the light show behind, so there's no seam. */
+  -webkit-mask-image: linear-gradient(to bottom, transparent 4%, #000 28%, #000 62%, transparent 96%);
+  mask-image: linear-gradient(to bottom, transparent 4%, #000 28%, #000 62%, transparent 96%);
+}
+
+.night__photo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 42%;
+  transform: translateY(var(--drift, 0px)) scale(1.04);
+  animation: breathe 6s ease-in-out infinite;
+}
+
+@keyframes breathe {
+  50% {
+    filter: saturate(1.25) brightness(1.08);
+  }
+}
+
+/* Darken the sides a touch so the line over the photo stays the focus. */
+.night::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(120% 80% at 50% 50%, rgba(5, 4, 26, 0) 55%, rgba(5, 4, 26, 0.55) 100%);
+  pointer-events: none;
+}
+
+.night__line {
+  position: relative;
+  z-index: 1;
+  align-self: end;
+  margin-bottom: 150px;
+  padding-inline: var(--gutter);
+  max-width: 20ch;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(24px, 4.6vw, 44px);
+  line-height: 1.2;
+  text-align: center;
+  text-wrap: balance;
+  text-shadow: 0 2px 24px rgba(5, 4, 26, 0.9), 0 0 2px rgba(5, 4, 26, 0.8);
+}
+
 /* ---------- Details ---------- */
 
 .details {
   position: relative;
-  padding: 40px var(--gutter) 72px;
+  z-index: 2;
+  margin-top: -110px;
+  padding: 0 var(--gutter) 72px;
 }
 
 .details__grid {

@@ -36,3 +36,4 @@ Then open http://localhost:8765/?Sara
 
 - [Unbounded](https://github.com/googlefonts/unbounded) by The Unbounded Project Authors, SIL Open Font License ([`assets/fonts/OFL.txt`](assets/fonts/OFL.txt)). A Latin subset with merged outlines is bundled so the lasers can trace each letter.
 - [opentype.js](https://opentype.js.org) 1.3.4, MIT License, bundled in [`assets/vendor`](assets/vendor).
+- Photo "DJ Night Vibes" from [StockCake](https://stockcake.com), in [`assets/img`](assets/img).
